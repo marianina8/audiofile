@@ -1,0 +1,87 @@
+package storage
+
+import (
+	"audiofile/models"
+	"encoding/json"
+	"fmt"
+	"io"
+	"io/ioutil"
+	"os"
+	"path/filepath"
+
+	"github.com/google/uuid"
+)
+
+type FlatFile struct {
+	Name string
+}
+
+func (f FlatFile) GetByID(id string) (*models.Audio, error) {
+	dirname, err := os.UserHomeDir()
+	if err != nil {
+		return nil, err
+	}
+	metadataFilePath := filepath.Join(dirname, "audiofile/", id, "/metadata.json")
+	file, err := ioutil.ReadFile(metadataFilePath)
+	if err != nil {
+		return nil, err
+	}
+	data := models.Audio{}
+	err = json.Unmarshal([]byte(file), &data)
+	return &data, err
+}
+
+func (f FlatFile) SaveMetadata(audio *models.Audio) error {
+	dirname, err := os.UserHomeDir()
+	if err != nil {
+		return err
+	}
+	audioDirPath := filepath.Join(dirname, "audiofile/", audio.Id)
+	metadataFilePath := filepath.Join(audioDirPath, "metadata.json")
+	file, err := os.Create(metadataFilePath)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	data, err := audio.JSON()
+	if err != nil {
+		fmt.Println("Err: ", err)
+		return err
+	}
+	_, err = io.WriteString(file, data)
+	if err != nil {
+		return err
+	}
+	return file.Sync()
+}
+
+func (f FlatFile) Upload(bytes []byte, filename string) (string, string, error) {
+	// generate guid
+	id := uuid.New()
+	// copy file to configured storage path by tag name or id
+	dirname, err := os.UserHomeDir()
+	if err != nil {
+		return id.String(), "", err
+	}
+	audioDirPath := filepath.Join(dirname, "audiofile/", id.String())
+	if err := os.MkdirAll(audioDirPath, os.ModePerm); err != nil {
+		return id.String(), "", err
+	}
+	audioFilePath := filepath.Join(audioDirPath, filename)
+	err = ioutil.WriteFile(audioFilePath, bytes, 0644)
+	if err != nil {
+		return id.String(), "", err
+	}
+	return id.String(), audioFilePath, nil
+}
+
+func (f FlatFile) List() ([]*models.Audio, error) {
+	fmt.Println("Listing")
+	return nil, nil
+}
+
+func (f FlatFile) Delete(id string, tag string) error {
+	fmt.Println("Deleting")
+	return nil
+}
