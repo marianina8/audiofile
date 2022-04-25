@@ -1,7 +1,7 @@
 package main
 
 import (
-	"audiofile/internal/command"
+	"audiofile/cmd/cli/command"
 	"audiofile/internal/interfaces"
 	"fmt"
 	"net/http"
