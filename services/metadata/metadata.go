@@ -13,7 +13,7 @@ type MetadataService struct {
 	Storage interfaces.Storage
 }
 
-func CreateMetadataServer(port int, storage interfaces.Storage) *http.Server {
+func CreateMetadataService(port int, storage interfaces.Storage) *MetadataService {
 	mux := http.NewServeMux()
 	metadataService := &MetadataService{
 		Server: &http.Server{
@@ -25,13 +25,13 @@ func CreateMetadataServer(port int, storage interfaces.Storage) *http.Server {
 	mux.HandleFunc("/upload", metadataService.uploadHandler)
 	mux.HandleFunc("/request", metadataService.getByIDHandler)
 	// mux.HandleFunc("/list", metadataService.listHandler)
-	return metadataService.Server
+	return metadataService
 }
 
 func Run(port int) {
 	flatfileStorage := storage.FlatFile{}
-	server := CreateMetadataServer(port, flatfileStorage)
-	err := server.ListenAndServe()
+	service := CreateMetadataService(port, flatfileStorage)
+	err := service.Server.ListenAndServe()
 	if err != nil {
 		fmt.Println("error starting api: ", err)
 	}
