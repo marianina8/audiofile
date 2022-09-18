@@ -7,9 +7,9 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/marianina8/audiofile/extractors/tags"
-	"github.com/marianina8/audiofile/extractors/transcript"
-	"github.com/marianina8/audiofile/models"
+	"audiofile/extractors/tags"
+	"audiofile/extractors/transcript"
+	"audiofile/models"
 )
 
 func (m *MetadataService) uploadHandler(res http.ResponseWriter, req *http.Request) {
@@ -28,7 +28,14 @@ func (m *MetadataService) uploadHandler(res http.ResponseWriter, req *http.Reque
 		res.WriteHeader(500)
 		return
 	}
-	defer f.Close()
+	defer func() {
+		err = os.Remove(handler.Filename)
+		if err != nil {
+			fmt.Println("error opening file: ", err)
+			res.WriteHeader(500)
+		}
+		f.Close()
+	}()
 
 	buf := bytes.NewBuffer(nil)
 	if _, err := io.Copy(buf, file); err != nil {

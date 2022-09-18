@@ -2,24 +2,6 @@
     "Id": "8a6a8942-161e-4b10-bf59-9d21785c9bd9",
     "Path": "/Users/marian/audiofile/8a6a8942-161e-4b10-bf59-9d21785c9bd9/beatdoctor.mp3",
     "Metadata": {
-        "audiopeak": {
-            "integrated_loudness": {
-                "i_lufs": -9.1,
-                "threshold_lufs": -19.3
-            },
-            "loudness_range": {
-                "lra_lu": 6.4,
-                "threshold_lufs": -29.3,
-                "lra_low_lufs": -14.1,
-                "lra_high_lufs": -7.6
-            },
-            "true_peak_dbfs": 0.1
-        },
-        "volumedetect": {
-            "n_samples": 20634222,
-            "mean_volume_db": -10,
-            "histogram_0_db": 26395
-        },
         "tags": {
             "title": "Shot In The Dark",
             "album": "Best Bytes Volume 4",

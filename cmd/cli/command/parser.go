@@ -1,8 +1,9 @@
 package command
 
 import (
-	"audiofile/internal/interfaces"
 	"fmt"
+
+	"audiofile/internal/interfaces"
 )
 
 type Parser struct {

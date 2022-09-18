@@ -9,11 +9,11 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/marianina8/audiofile/models"
+	"audiofile/models"
 )
 
 func Extract(m *models.Audio) error {
-	apiKey := os.Getenv("ASSEMBLYAI_API_KEY") // ad915a51c359466a8f4ab05d21b05334
+	apiKey := os.Getenv("ASSEMBLYAI_API_KEY")
 	if apiKey == "" {
 		fmt.Println("missing ASSEMBLYAI_API_KEY.  Skipping transcript exraction")
 		return nil

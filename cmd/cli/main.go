@@ -1,10 +1,12 @@
 package main
 
 import (
-	"audiofile/cmd/cli/command"
-	"audiofile/internal/interfaces"
+	"fmt"
 	"net/http"
 	"os"
+
+	"audiofile/cmd/cli/command"
+	"audiofile/internal/interfaces"
 )
 
 func main() {
@@ -16,6 +18,7 @@ func main() {
 	}
 	parser := command.NewParser(cmds)
 	if err := parser.Parse(os.Args[1:]); err != nil {
+		os.Stderr.WriteString(fmt.Sprintf("error: %v", err.Error()))
 		os.Exit(1)
 	}
 }

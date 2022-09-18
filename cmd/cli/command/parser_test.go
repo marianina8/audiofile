@@ -1,12 +1,13 @@
 package command
 
 import (
-	"audiofile/internal/interfaces"
 	"fmt"
 	"io/ioutil"
 	"net/http"
 	"strings"
 	"testing"
+
+	"audiofile/internal/interfaces"
 )
 
 type MockClient struct {

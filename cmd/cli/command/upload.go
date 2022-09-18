@@ -1,7 +1,6 @@
 package command
 
 import (
-	"audiofile/internal/interfaces"
 	"bytes"
 	"flag"
 	"fmt"
@@ -11,6 +10,8 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+
+	"audiofile/internal/interfaces"
 )
 
 func NewUploadCommand(client interfaces.Client) *UploadCommand {
@@ -35,10 +36,17 @@ func (cmd *UploadCommand) Name() string {
 }
 
 func (cmd *UploadCommand) ParseFlags(flags []string) error {
+	if len(flags) == 0 {
+		fmt.Println("usage: ./audiofile-cli upload -filename <filename>")
+		return fmt.Errorf("missing flags")
+	}
 	return cmd.fs.Parse(flags)
 }
 
 func (cmd *UploadCommand) Run() error {
+	if cmd.filename == "" {
+		return fmt.Errorf("missing filename")
+	}
 	fmt.Println("Uploading", cmd.filename, "...")
 	url := "http://localhost/upload"
 	method := "POST"
@@ -46,47 +54,40 @@ func (cmd *UploadCommand) Run() error {
 	multipartWriter := multipart.NewWriter(payload)
 	file, err := os.Open(cmd.filename)
 	if err != nil {
-		os.Stderr.WriteString(err.Error())
 		return err
 	}
 	defer file.Close()
 
 	partWriter, err := multipartWriter.CreateFormFile("file", filepath.Base(cmd.filename))
 	if err != nil {
-		os.Stderr.WriteString(err.Error())
 		return err
 	}
 
 	_, err = io.Copy(partWriter, file)
 	if err != nil {
-		os.Stderr.WriteString(err.Error())
 		return err
 	}
 
 	err = multipartWriter.Close()
 	if err != nil {
-		os.Stderr.WriteString(err.Error())
 		return err
 	}
 
 	client := cmd.client
 	req, err := http.NewRequest(method, url, payload)
 	if err != nil {
-		os.Stderr.WriteString(err.Error())
 		return err
 	}
 
 	req.Header.Set("Content-Type", multipartWriter.FormDataContentType())
 	res, err := client.Do(req)
 	if err != nil {
-		os.Stderr.WriteString(err.Error())
 		return err
 	}
 	defer res.Body.Close()
 
 	body, err := ioutil.ReadAll(res.Body)
 	if err != nil {
-		os.Stderr.WriteString(err.Error())
 		return err
 	}
 

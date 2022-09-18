@@ -1,14 +1,14 @@
 package command
 
 import (
-	"audiofile/internal/interfaces"
 	"bytes"
 	"flag"
 	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/url"
-	"os"
+
+	"audiofile/internal/interfaces"
 )
 
 func NewGetCommand(client interfaces.Client) *GetCommand {
@@ -33,10 +33,17 @@ func (cmd *GetCommand) Name() string {
 }
 
 func (cmd *GetCommand) ParseFlags(flags []string) error {
+	if len(flags) == 0 {
+		fmt.Println("usage: ./audiofile-cli get -id <id>")
+		return fmt.Errorf("missing flags")
+	}
 	return cmd.fs.Parse(flags)
 }
 
 func (cmd *GetCommand) Run() error {
+	if cmd.id == "" {
+		return fmt.Errorf("missing id")
+	}
 	params := "id=" + url.QueryEscape(cmd.id)
 	path := fmt.Sprintf("http://localhost/request?%s", params)
 	payload := &bytes.Buffer{}
@@ -45,19 +52,16 @@ func (cmd *GetCommand) Run() error {
 
 	req, err := http.NewRequest(method, path, payload)
 	if err != nil {
-		os.Stderr.WriteString(err.Error())
 		return err
 	}
 	resp, err := client.Do(req)
 	if err != nil {
-		os.Stderr.WriteString(err.Error())
 		return err
 	}
 	defer resp.Body.Close()
 
 	b, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		os.Stderr.WriteString(err.Error())
 		return err
 	}
 	fmt.Println(string(b))

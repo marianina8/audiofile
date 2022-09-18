@@ -1,9 +1,10 @@
 package command
 
 import (
-	"audiofile/internal/interfaces"
 	"flag"
 	"fmt"
+
+	"audiofile/internal/interfaces"
 )
 
 func NewListCommand(client interfaces.Client) *ListCommand {
