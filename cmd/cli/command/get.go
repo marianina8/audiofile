@@ -47,10 +47,9 @@ func (cmd *GetCommand) Run() error {
 	params := "id=" + url.QueryEscape(cmd.id)
 	path := fmt.Sprintf("http://localhost/request?%s", params)
 	payload := &bytes.Buffer{}
-	method := "GET"
 	client := cmd.client
 
-	req, err := http.NewRequest(method, path, payload)
+	req, err := http.NewRequest(http.MethodGet, path, payload)
 	if err != nil {
 		return err
 	}

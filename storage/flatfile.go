@@ -8,7 +8,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/marianina8/audiofile/models"
+	"audiofile/models"
 
 	"github.com/google/uuid"
 )
@@ -78,8 +78,26 @@ func (f FlatFile) Upload(bytes []byte, filename string) (string, string, error) 
 }
 
 func (f FlatFile) List() ([]*models.Audio, error) {
-	fmt.Println("Listing")
-	return nil, nil
+	dirname, err := os.UserHomeDir()
+	if err != nil {
+		return nil, err
+	}
+	metadataFilePath := filepath.Join(dirname, "audiofile/")
+	files, err := ioutil.ReadDir(metadataFilePath)
+	if err != nil {
+		return nil, err
+	}
+	audioFiles := []*models.Audio{}
+	for _, file := range files {
+		if file.IsDir() {
+			name, err := f.GetByID(file.Name())
+			if err != nil {
+				return nil, err
+			}
+			audioFiles = append(audioFiles, name)
+		}
+	}
+	return audioFiles, nil
 }
 
 func (f FlatFile) Delete(id string, tag string) error {

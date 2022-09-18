@@ -24,7 +24,7 @@ func CreateMetadataService(port int, storage interfaces.Storage) *MetadataServic
 	}
 	mux.HandleFunc("/upload", metadataService.uploadHandler)
 	mux.HandleFunc("/request", metadataService.getByIDHandler)
-	// mux.HandleFunc("/list", metadataService.listHandler)
+	mux.HandleFunc("/list", metadataService.listHandler)
 	return metadataService
 }
 

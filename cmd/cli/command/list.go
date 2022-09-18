@@ -1,8 +1,11 @@
 package command
 
 import (
+	"bytes"
 	"flag"
 	"fmt"
+	"io/ioutil"
+	"net/http"
 
 	"audiofile/internal/interfaces"
 )
@@ -20,15 +23,33 @@ type ListCommand struct {
 	client interfaces.Client
 }
 
-func (l *ListCommand) Name() string {
-	return l.fs.Name()
+func (cmd *ListCommand) Name() string {
+	return cmd.fs.Name()
 }
 
-func (l *ListCommand) ParseFlags(flags []string) error {
-	return l.fs.Parse(flags)
+func (cmd *ListCommand) ParseFlags(flags []string) error {
+	return cmd.fs.Parse(flags)
 }
 
-func (l *ListCommand) Run() error {
-	fmt.Println("listing audiofiles...")
+func (cmd *ListCommand) Run() error {
+	path := "http://localhost/list"
+	payload := &bytes.Buffer{}
+	client := cmd.client
+
+	req, err := http.NewRequest(http.MethodGet, path, payload)
+	if err != nil {
+		return err
+	}
+	resp, err := client.Do(req)
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+
+	b, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return err
+	}
+	fmt.Println(string(b))
 	return nil
 }
