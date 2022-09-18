@@ -1,9 +1,10 @@
 package main
 
 import (
-	metadataService "audiofile/services/metadata"
 	"flag"
 	"fmt"
+
+	metadataService "github.com/marianina8/audiofile/services/metadata"
 )
 
 func main() {

@@ -19,4 +19,7 @@ go build -o audiofile-cli cmd/cli/main.go
 ./audiofile-cli
 
 ### NOTE
-The API must be started and running before the CLI.  
+The API must be started and running before the CLI.  First, build the API:
+go build -o audiofile-api cmd/api/main.go
+Then run it in a separate terminal:
+./audiofile-api

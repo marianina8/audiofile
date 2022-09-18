@@ -1,9 +1,10 @@
 package tags
 
 import (
-	"audiofile/models"
 	"fmt"
 	"os"
+
+	"github.com/marianina8/audiofile/models"
 
 	"github.com/dhowden/tag"
 )
