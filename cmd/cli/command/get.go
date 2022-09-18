@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"os"
 )
 
 func NewGetCommand(client interfaces.Client) *GetCommand {
@@ -44,16 +45,19 @@ func (cmd *GetCommand) Run() error {
 
 	req, err := http.NewRequest(method, path, payload)
 	if err != nil {
+		os.Stderr.WriteString(err.Error())
 		return err
 	}
 	resp, err := client.Do(req)
 	if err != nil {
+		os.Stderr.WriteString(err.Error())
 		return err
 	}
 	defer resp.Body.Close()
 
 	b, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
+		os.Stderr.WriteString(err.Error())
 		return err
 	}
 	fmt.Println(string(b))

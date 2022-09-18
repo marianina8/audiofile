@@ -46,43 +46,50 @@ func (cmd *UploadCommand) Run() error {
 	multipartWriter := multipart.NewWriter(payload)
 	file, err := os.Open(cmd.filename)
 	if err != nil {
+		os.Stderr.WriteString(err.Error())
 		return err
 	}
 	defer file.Close()
 
 	partWriter, err := multipartWriter.CreateFormFile("file", filepath.Base(cmd.filename))
 	if err != nil {
+		os.Stderr.WriteString(err.Error())
 		return err
 	}
 
 	_, err = io.Copy(partWriter, file)
 	if err != nil {
+		os.Stderr.WriteString(err.Error())
 		return err
 	}
 
 	err = multipartWriter.Close()
 	if err != nil {
+		os.Stderr.WriteString(err.Error())
 		return err
 	}
 
 	client := cmd.client
 	req, err := http.NewRequest(method, url, payload)
 	if err != nil {
+		os.Stderr.WriteString(err.Error())
 		return err
 	}
 
 	req.Header.Set("Content-Type", multipartWriter.FormDataContentType())
 	res, err := client.Do(req)
 	if err != nil {
+		os.Stderr.WriteString(err.Error())
 		return err
 	}
 	defer res.Body.Close()
 
 	body, err := ioutil.ReadAll(res.Body)
 	if err != nil {
+		os.Stderr.WriteString(err.Error())
 		return err
 	}
 
 	fmt.Println("Audiofile ID: ", string(body))
-	return err
+	return nil
 }

@@ -1,10 +1,8 @@
 package metadata
 
 import (
-	"audiofile/extractors/audiopeak"
 	"audiofile/extractors/tags"
 	"audiofile/extractors/transcript"
-	"audiofile/extractors/volumedetect"
 	"audiofile/models"
 	"bytes"
 	"fmt"
@@ -56,29 +54,6 @@ func (m *MetadataService) uploadHandler(res http.ResponseWriter, req *http.Reque
 		var errors []error
 
 		audio.Status = "Complete"
-		// audiopeak
-		err = audiopeak.Extract(audio)
-		if err != nil {
-			fmt.Println("error extracting audiopeak metadata: ", err)
-			errors = append(errors, err)
-		}
-		err = m.Storage.SaveMetadata(audio)
-		if err != nil {
-			fmt.Println("error saving metadata: ", err)
-			errors = append(errors, err)
-		}
-
-		// volumedetect
-		err = volumedetect.Extract(audio)
-		if err != nil {
-			fmt.Println("error extracting volumedetect metadata: ", err)
-			errors = append(errors, err)
-		}
-		err = m.Storage.SaveMetadata(audio)
-		if err != nil {
-			fmt.Println("error saving metadata: ", err)
-			errors = append(errors, err)
-		}
 
 		// tags
 		err = tags.Extract(audio)
