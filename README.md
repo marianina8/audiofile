@@ -1,20 +1,13 @@
 # audiofile
-In Chapter 3, we discuss a command line interface built from scratch which handles generating metadata from uploaded audio files, local flat file storage and retrieval of audio metadata.  This CLI is just an example and for reference to the chapter.  It was created on MacOS and other operating systems have not yet been tested at this time.
-
-## Within the root of the audiofile folder, to start the API:
-go run cmd/api/main.go
-### NOTE
-To change the default port, 80, pass in the new port value with the `-p` flag.
+In Chapter 4, we discuss abou the frameworks that can speed up CLI development.  Within this Chapter-4 branch, we convert the older version of the command line interface to utilize the Cobra package.
 
 ## To generate the audiofile command line interface:
-go build -o audiofile-cli cmd/cli/main.go
+make build
+
+## To start the audiofile API (required for the CLI to run):
+The API must be started and running before the CLI.  Start the APi in a separate terminal.  Within the working directory:
+./bin/audiofile api
 
 ## To call the audiofile command line interface:
-./audiofile-cli
+./bin/audiofile
 
-
-### NOTE
-The API must be started and running before the CLI.  First, build the API:
-go build -o audiofile-api cmd/api/main.go
-Then run it in a separate terminal:
-./audiofile-api
