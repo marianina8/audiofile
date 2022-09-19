@@ -28,11 +28,12 @@ func CreateMetadataService(port int, storage interfaces.Storage) *MetadataServic
 	return metadataService
 }
 
-func Run(port int) {
+func Run(port int) *http.Server {
 	flatfileStorage := storage.FlatFile{}
 	service := CreateMetadataService(port, flatfileStorage)
 	err := service.Server.ListenAndServe()
 	if err != nil {
 		fmt.Println("error starting api: ", err)
 	}
+	return service.Server
 }
