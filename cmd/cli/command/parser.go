@@ -3,7 +3,7 @@ package command
 import (
 	"fmt"
 
-	"audiofile/internal/interfaces"
+	"github.com/marianina8/audiofile/internal/interfaces"
 )
 
 type Parser struct {

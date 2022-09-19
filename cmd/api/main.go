@@ -4,7 +4,7 @@ import (
 	"flag"
 	"fmt"
 
-	metadataService "audiofile/services/metadata"
+	metadataService "github.com/marianina8/audiofile/services/metadata"
 )
 
 func main() {

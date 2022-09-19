@@ -8,7 +8,7 @@ import (
 	"net/http"
 	"net/url"
 
-	"audiofile/internal/interfaces"
+	"github.com/marianina8/audiofile/internal/interfaces"
 )
 
 func NewGetCommand(client interfaces.Client) *GetCommand {

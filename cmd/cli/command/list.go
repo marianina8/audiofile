@@ -7,7 +7,7 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	"audiofile/internal/interfaces"
+	"github.com/marianina8/audiofile/internal/interfaces"
 )
 
 func NewListCommand(client interfaces.Client) *ListCommand {

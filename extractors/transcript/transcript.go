@@ -9,7 +9,7 @@ import (
 	"net/http"
 	"os"
 
-	"audiofile/models"
+	"github.com/marianina8/audiofile/models"
 )
 
 func Extract(m *models.Audio) error {

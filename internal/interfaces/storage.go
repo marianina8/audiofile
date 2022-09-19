@@ -1,7 +1,7 @@
 package interfaces
 
 import (
-	"audiofile/models"
+	"github.com/marianina8/audiofile/models"
 )
 
 type Storage interface {

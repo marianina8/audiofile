@@ -11,7 +11,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"audiofile/internal/interfaces"
+	"github.com/marianina8/audiofile/internal/interfaces"
 )
 
 func NewUploadCommand(client interfaces.Client) *UploadCommand {

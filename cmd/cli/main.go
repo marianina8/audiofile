@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"os"
 
-	"audiofile/cmd/cli/command"
-	"audiofile/internal/interfaces"
+	"github.com/marianina8/audiofile/cmd/cli/command"
+	"github.com/marianina8/audiofile/internal/interfaces"
 )
 
 func main() {
