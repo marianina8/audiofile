@@ -1,7 +1,8 @@
 package metadata
 
 import (
-	"fmt"
+	"bytes"
+	"encoding/json"
 	"io"
 	"net/http"
 )
@@ -14,9 +15,8 @@ func (m *MetadataService) listHandler(res http.ResponseWriter, req *http.Request
 	}
 	jsonData, err := json.Marshal(audioFiles)
 	if err != nil {
-			res.WriteHeader(500)
-			return
-		}
+		res.WriteHeader(500)
+		return
 	}
 	var prettyJSON bytes.Buffer
 	err = json.Indent(&prettyJSON, []byte(jsonData), "", "    ")

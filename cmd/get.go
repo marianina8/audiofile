@@ -6,7 +6,9 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"time"
 
+	"github.com/marianina8/audiofile/utils"
 	"github.com/spf13/cobra"
 )
 
@@ -16,7 +18,9 @@ var getCmd = &cobra.Command{
 	Short: "Get audio metadata",
 	Long:  `Get audio metadata by audiofile id.  Metadata includes available tags and transcript.`,
 	RunE: func(cmd *cobra.Command, args []string) error {
-		client := &http.Client{}
+		client := &http.Client{
+			Timeout: 15 * time.Second,
+		}
 		id, err := cmd.Flags().GetString("id")
 		if err != nil {
 			fmt.Printf("error retrieving id: %s\n", err.Error())
@@ -35,7 +39,10 @@ var getCmd = &cobra.Command{
 			return err
 		}
 		defer resp.Body.Close()
-
+		err = utils.CheckResponse(resp)
+		if err != nil {
+			return err
+		}
 		b, err := ioutil.ReadAll(resp.Body)
 		if err != nil {
 			return err

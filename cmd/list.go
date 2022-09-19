@@ -5,7 +5,9 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"time"
 
+	"github.com/marianina8/audiofile/utils"
 	"github.com/spf13/cobra"
 )
 
@@ -16,7 +18,9 @@ var listCmd = &cobra.Command{
 	Long: `List audio file metadata in JSON format.  Data includes id, tags, 
 and transcript if available.`,
 	RunE: func(cmd *cobra.Command, args []string) error {
-		client := &http.Client{}
+		client := &http.Client{
+			Timeout: 15 * time.Second,
+		}
 
 		path := "http://localhost/list"
 		payload := &bytes.Buffer{}
@@ -29,7 +33,10 @@ and transcript if available.`,
 			return err
 		}
 		defer resp.Body.Close()
-
+		err = utils.CheckResponse(resp)
+		if err != nil {
+			return err
+		}
 		b, err := ioutil.ReadAll(resp.Body)
 		if err != nil {
 			return err

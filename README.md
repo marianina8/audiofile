@@ -1,5 +1,5 @@
 # audiofile
-In Chapter 4, we discuss abou the frameworks that can speed up CLI development.  Within this Chapter-4 branch, we convert the older version of the command line interface to utilize the Cobra package.
+In Chapter 6, we discuss about handling timeouts an errors.  In this next revision of the command line interface, we add a function to check the response from the client and add a timeout value of fifteen seconds to the client.
 
 ## To generate the audiofile command line interface:
 make build
