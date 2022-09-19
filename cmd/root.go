@@ -19,6 +19,7 @@ Basic commands include: get, list, and upload.`,
 func Execute() {
 	err := rootCmd.Execute()
 	if err != nil {
+		os.Stderr.WriteString(err.Error())
 		os.Exit(1)
 	}
 }

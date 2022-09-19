@@ -12,7 +12,9 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"time"
 
+	"github.com/marianina8/audiofile/utils"
 	"github.com/spf13/cobra"
 )
 
@@ -24,7 +26,9 @@ var uploadCmd = &cobra.Command{
 filepath of the audiofile.`,
 	SuggestFor: []string{"add"},
 	RunE: func(cmd *cobra.Command, args []string) error {
-		client := &http.Client{}
+		client := &http.Client{
+			Timeout: 15 * time.Second,
+		}
 		filename, err := cmd.Flags().GetString("filename")
 		if err != nil {
 			fmt.Printf("error retrieving filename: %s\n", err.Error())
@@ -60,13 +64,16 @@ filepath of the audiofile.`,
 		}
 
 		req.Header.Set("Content-Type", multipartWriter.FormDataContentType())
-		res, err := client.Do(req)
+		resp, err := client.Do(req)
 		if err != nil {
 			return err
 		}
-		defer res.Body.Close()
-
-		body, err := ioutil.ReadAll(res.Body)
+		defer resp.Body.Close()
+		err = utils.CheckResponse(resp)
+		if err != nil {
+			return err
+		}
+		body, err := ioutil.ReadAll(resp.Body)
 		if err != nil {
 			return err
 		}
