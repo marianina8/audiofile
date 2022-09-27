@@ -4,9 +4,11 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"io/fs"
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/marianina8/audiofile/models"
 
@@ -22,7 +24,7 @@ func (f FlatFile) GetByID(id string) (*models.Audio, error) {
 	if err != nil {
 		return nil, err
 	}
-	metadataFilePath := filepath.Join(dirname, "audiofile/", id, "/metadata.json")
+	metadataFilePath := filepath.Join(dirname, "audiofile", id, "metadata.json")
 	file, err := ioutil.ReadFile(metadataFilePath)
 	if err != nil {
 		return nil, err
@@ -37,7 +39,7 @@ func (f FlatFile) SaveMetadata(audio *models.Audio) error {
 	if err != nil {
 		return err
 	}
-	audioDirPath := filepath.Join(dirname, "audiofile/", audio.Id)
+	audioDirPath := filepath.Join(dirname, "audiofile", audio.Id)
 	metadataFilePath := filepath.Join(audioDirPath, "metadata.json")
 	file, err := os.Create(metadataFilePath)
 	if err != nil {
@@ -65,7 +67,7 @@ func (f FlatFile) Upload(bytes []byte, filename string) (string, string, error) 
 	if err != nil {
 		return id.String(), "", err
 	}
-	audioDirPath := filepath.Join(dirname, "audiofile/", id.String())
+	audioDirPath := filepath.Join(dirname, "audiofile", id.String())
 	if err := os.MkdirAll(audioDirPath, os.ModePerm); err != nil {
 		return id.String(), "", err
 	}
@@ -82,7 +84,7 @@ func (f FlatFile) List() ([]*models.Audio, error) {
 	if err != nil {
 		return nil, err
 	}
-	metadataFilePath := filepath.Join(dirname, "audiofile/")
+	metadataFilePath := filepath.Join(dirname, "audiofile")
 	files, err := ioutil.ReadDir(metadataFilePath)
 	if err != nil {
 		return nil, err
@@ -100,7 +102,42 @@ func (f FlatFile) List() ([]*models.Audio, error) {
 	return audioFiles, nil
 }
 
-func (f FlatFile) Delete(id string, tag string) error {
-	fmt.Println("Deleting")
+func (f FlatFile) Delete(id string) error {
+	dirname, err := os.UserHomeDir()
+	if err != nil {
+		return err
+	}
+	audioIDFilePath := filepath.Join(dirname, "audiofile", id)
+	err = os.RemoveAll(audioIDFilePath)
+	if err != nil {
+		return err
+	}
 	return nil
+}
+
+func (f FlatFile) Search(searchFor string) ([]*models.Audio, error) {
+	dirname, err := os.UserHomeDir()
+	if err != nil {
+		return nil, err
+	}
+	audioFilePath := filepath.Join(dirname, "audiofile")
+	matchingAudio := []*models.Audio{}
+	err = filepath.WalkDir(audioFilePath, func(path string, d fs.DirEntry, err error) error {
+		if d.Name() == "metadata.json" {
+			contents, err := ioutil.ReadFile(path)
+			if err != nil {
+				return err
+			}
+			if strings.Contains(strings.ToLower(string(contents)), strings.ToLower(searchFor)) {
+				data := models.Audio{}
+				err = json.Unmarshal(contents, &data)
+				if err != nil {
+					return err
+				}
+				matchingAudio = append(matchingAudio, &data)
+			}
+		}
+		return nil
+	})
+	return matchingAudio, err
 }

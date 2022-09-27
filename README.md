@@ -4,10 +4,10 @@ In Chapter 6, we discuss about handling timeouts an errors.  In this next revisi
 ## To generate the audiofile command line interface:
 make build
 
-## To start the audiofile API (required for the CLI to run):
+## [UNIX] To start the audiofile API (required for the CLI to run):
 The API must be started and running before the CLI.  Start the APi in a separate terminal.  Within the working directory:
 ./bin/audiofile api
 
-## To call the audiofile command line interface:
+## [UNIX] To call the audiofile command line interface:
 ./bin/audiofile
 

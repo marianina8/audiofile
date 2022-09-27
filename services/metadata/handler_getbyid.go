@@ -19,8 +19,9 @@ func (m *MetadataService) getByIDHandler(res http.ResponseWriter, req *http.Requ
 
 	audio, err := m.Storage.GetByID(id)
 	if err != nil {
-		if strings.Contains(err.Error(), "not found") {
-			res.WriteHeader(500)
+		if strings.Contains(err.Error(), "not found") || strings.Contains(err.Error(), "no such file or directory") {
+			io.WriteString(res, "id not found")
+			res.WriteHeader(200)
 			return
 		}
 		res.WriteHeader(500)

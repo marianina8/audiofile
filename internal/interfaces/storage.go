@@ -9,5 +9,6 @@ type Storage interface {
 	SaveMetadata(audio *models.Audio) error
 	List() ([]*models.Audio, error)
 	GetByID(id string) (*models.Audio, error)
-	Delete(id string, tag string) error
+	Delete(id string) error
+	Search(searchFor string) ([]*models.Audio, error)
 }
