@@ -5,14 +5,17 @@ package cmd
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/url"
 	"time"
 
+	"github.com/marianina8/audiofile/models"
 	"github.com/marianina8/audiofile/utils"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 // searchCmd represents the search command
@@ -24,19 +27,23 @@ var searchCmd = &cobra.Command{
 		client := &http.Client{
 			Timeout: 15 * time.Second,
 		}
-		value, err := cmd.Flags().GetString("value")
-		if err != nil {
-			fmt.Printf("error retrieving value: %s\n", err.Error())
-			return err
+		var err error
+		value, _ := cmd.Flags().GetString("value")
+		if value == "" {
+			value, err = utils.AskForValue()
+			if err != nil {
+				return err
+			}
 		}
 		params := "searchFor=" + url.QueryEscape(value)
-		path := fmt.Sprintf("http://localhost/search?%s", params)
+		path := fmt.Sprintf("http://%s:%d/search?%s", viper.Get("cli.hostname"), int(viper.Get("cli.port").(float64)), params)
 		payload := &bytes.Buffer{}
 
 		req, err := http.NewRequest(http.MethodGet, path, payload)
 		if err != nil {
 			return err
 		}
+		fmt.Printf("Sending request: %s %s %s...\n", http.MethodGet, path, payload)
 		resp, err := client.Do(req)
 		if err != nil {
 			return err
@@ -50,12 +57,38 @@ var searchCmd = &cobra.Command{
 		if err != nil {
 			return err
 		}
-		fmt.Println(string(b))
+		jsonFormat, _ := cmd.Flags().GetBool("json")
+		if jsonFormat {
+			if utils.IsAtty() {
+				err = utils.Pager(string(b))
+				if err != nil {
+					return err
+				}
+			} else {
+				fmt.Println(string(b))
+			}
+		} else {
+			var audios models.AudioList
+			json.Unmarshal(b, &audios)
+			tableData, err := audios.Table()
+			if err != nil {
+				return err
+			}
+			if utils.IsAtty() {
+				err = utils.Pager(tableData)
+				if err != nil {
+					return err
+				}
+			} else {
+				fmt.Println(tableData)
+			}
+		}
 		return nil
 	},
 }
 
 func init() {
 	searchCmd.Flags().String("value", "", "string to search for in metadata")
+	searchCmd.Flags().Bool("json", false, "return json format")
 	rootCmd.AddCommand(searchCmd)
 }

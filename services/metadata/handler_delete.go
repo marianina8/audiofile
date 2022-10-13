@@ -27,5 +27,5 @@ func (m *MetadataService) deleteHandler(res http.ResponseWriter, req *http.Reque
 		return
 	}
 	res.WriteHeader(http.StatusOK)
-	io.WriteString(res, "success")
+	io.WriteString(res, fmt.Sprintf("successfully deleted audio with id: %s", id))
 }

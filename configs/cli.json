@@ -1,0 +1,7 @@
+{
+    "cli": {
+        "logLevel": "info", 
+        "hostname": "localhost", 
+        "port": 80 
+    }
+}
