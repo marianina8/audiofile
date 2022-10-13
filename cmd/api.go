@@ -9,6 +9,7 @@ import (
 
 	metadataService "github.com/marianina8/audiofile/services/metadata"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 // apiCmd represents the api command
@@ -18,8 +19,9 @@ var apiCmd = &cobra.Command{
 	Long: `Start or stop the API with the following usage:
 ./audiofile api <start|stop>`,
 	Run: func(cmd *cobra.Command, args []string) {
+		configure()
 		var port int
-		flag.IntVar(&port, "p", 80, "Port for metadata service")
+		flag.IntVar(&port, "p", int(viper.Get("api.port").(float64)), "Port for metadata service")
 		flag.Parse()
 		fmt.Printf("Starting API at http://localhost:%d\nPress Ctrl-C to stop.\n", port)
 		metadataService.Run(port)
@@ -28,4 +30,13 @@ var apiCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(apiCmd)
+}
+
+func configure() {
+	viper.AddConfigPath("./configs")
+	viper.SetConfigName("api")
+	viper.SetConfigType("json")
+	viper.ReadInConfig()
+	viper.SetDefault("api.logLevel", "info")
+	viper.SetDefault("api.port", 80)
 }

@@ -4,6 +4,7 @@ import (
 	"os"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 // rootCmd represents the base command when called without any subcommands
@@ -19,11 +20,21 @@ Basic commands include: get, list, and upload.`,
 func Execute() {
 	err := rootCmd.Execute()
 	if err != nil {
-		os.Stderr.WriteString(err.Error())
+		//os.Stderr.WriteString(err.Error()) - no need to add this, Cobra already outputs error message for us
 		os.Exit(1)
 	}
 }
 
 func init() {
 	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+}
+
+func Configure() {
+	viper.AddConfigPath("./configs")
+	viper.SetConfigName("cli")
+	viper.SetConfigType("json")
+	viper.ReadInConfig()
+	viper.SetDefault("cli.logLevel", "info")
+	viper.SetDefault("cli.hostname", "localhost")
+	viper.SetDefault("cli.port", 80)
 }
