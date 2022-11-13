@@ -2,13 +2,11 @@ package cmd
 
 import (
 	"bytes"
-	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/http"
 	"time"
 
-	"github.com/marianina8/audiofile/models"
 	"github.com/marianina8/audiofile/utils"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -20,7 +18,9 @@ var listCmd = &cobra.Command{
 	Short: "List all audio files",
 	Long: `List audio file metadata in JSON format.  Data includes id, tags, 
 and transcript if available.`,
+	Example: `audiofile list`,
 	RunE: func(cmd *cobra.Command, args []string) error {
+		verbose, _ := cmd.Flags().GetBool("verbose")
 		client := &http.Client{
 			Timeout: 15 * time.Second,
 		}
@@ -28,49 +28,26 @@ and transcript if available.`,
 		payload := &bytes.Buffer{}
 		req, err := http.NewRequest(http.MethodGet, path, payload)
 		if err != nil {
-			return err
+			return utils.Error("\n  %v\n  check configuration to ensure properly configured hostname and port", err, verbose)
 		}
-		fmt.Printf("Sending request: %s %s %s...\n", http.MethodGet, path, payload)
+		utils.LogRequest(verbose, http.MethodGet, path, payload.String())
 		resp, err := client.Do(req)
 		if err != nil {
-			return err
+			return utils.Error("\n  %v\n  check configuration to ensure properly configured hostname and port\n  or check that api is running", err, verbose)
 		}
 		defer resp.Body.Close()
 		err = utils.CheckResponse(resp)
 		if err != nil {
-			return err
+			return utils.Error("\n  checking response: %v", err, verbose)
 		}
 		b, err := ioutil.ReadAll(resp.Body)
 		if err != nil {
-			return err
+			return utils.Error("\n  reading response: %v\n  ", err, verbose)
 		}
+		utils.LogHTTPResponse(verbose, resp, b)
 		jsonFormat, _ := cmd.Flags().GetBool("json")
-		if jsonFormat {
-			if utils.IsAtty() {
-				err = utils.Pager(string(b))
-				if err != nil {
-					return err
-				}
-			} else {
-				fmt.Println(string(b))
-			}
-		} else {
-			var audios models.AudioList
-			json.Unmarshal(b, &audios)
-			tableData, err := audios.Table()
-			if err != nil {
-				return err
-			}
-			if utils.IsAtty() {
-				err = utils.Pager(tableData)
-				if err != nil {
-					return err
-				}
-			} else {
-				fmt.Println(tableData)
-			}
-		}
-		return nil
+		err = print(b, jsonFormat)
+		return err
 	},
 }
 

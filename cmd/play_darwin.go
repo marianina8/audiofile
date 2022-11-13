@@ -9,10 +9,10 @@ import (
 	"github.com/pterm/pterm"
 )
 
-func play(audiofilePath string) error {
+func play(audiofilePath string, verbose bool) error {
 	cmd := exec.Command("afplay", audiofilePath)
 	if err := cmd.Start(); err != nil {
-		return err
+		return utils.Error("\n  starting afplay command: %v", err, verbose)
 	}
 	spinnerInfo := &pterm.SpinnerPrinter{}
 	if utils.IsAtty() {
@@ -20,7 +20,7 @@ func play(audiofilePath string) error {
 	}
 	err := cmd.Wait()
 	if err != nil {
-		return err
+		return utils.Error("\n  running afplay command: %v", err, verbose)
 	}
 	if utils.IsAtty() {
 		spinnerInfo.Stop()
