@@ -28,7 +28,8 @@ var playCmd = &cobra.Command{
 		if err != nil {
 			return utils.Error("\n  unmarshalling audio struct: %v", err, verbose)
 		}
-		return play(audio.Path, verbose)
+		_, err = play(audio.Path, verbose, false)
+		return err
 	},
 }
 
