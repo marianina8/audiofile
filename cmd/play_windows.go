@@ -1,10 +1,12 @@
-//go:build windows
+//go:build windows && (free || pro)
 
 package cmd
 
 import (
-	"fmt"
 	"os/exec"
+
+	"github.com/marianina8/audiofile/utils"
+	"github.com/pterm/pterm"
 )
 
 func play(audiofilePath string, verbose, disableOutput bool) (int, error) {
@@ -16,7 +18,8 @@ func play(audiofilePath string, verbose, disableOutput bool) (int, error) {
 		spinnerInfo := &pterm.SpinnerPrinter{}
 		if utils.IsAtty() {
 			spinnerInfo, _ = pterm.DefaultSpinner.Start("Enjoy the music...")
-		}	err := cmd.Wait()
+		}
+		err := cmd.Wait()
 		if err != nil {
 			return 0, utils.Error("\n  running start command: %v", err, verbose)
 		}

@@ -1,6 +1,5 @@
-/*
-Copyright © 2022 NAME HERE <EMAIL ADDRESS>
-*/
+//go:build free || pro
+
 package cmd
 
 import (

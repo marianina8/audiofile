@@ -70,6 +70,8 @@ func InitCLILogger() {
 	if err != nil {
 		panic(err)
 	}
+	cfg.Encoding = "json"
+	cfg.Level = zap.NewAtomicLevel()
 	Logger, err = cfg.Build()
 	if err != nil {
 		panic(err)

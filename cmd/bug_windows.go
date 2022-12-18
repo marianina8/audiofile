@@ -1,9 +1,8 @@
-//go:build windows
+//go:build windows && (free || pro)
 
 package cmd
 
 import (
-	"fmt"
 	"os/exec"
 )
 

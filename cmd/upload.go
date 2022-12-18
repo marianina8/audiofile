@@ -1,6 +1,5 @@
-/*
-Copyright © 2022 NAME HERE <EMAIL ADDRESS>
-*/
+//go:build free || pro
+
 package cmd
 
 import (
@@ -12,7 +11,6 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
-	"time"
 
 	"github.com/marianina8/audiofile/utils"
 	"github.com/pterm/pterm"
@@ -34,9 +32,6 @@ filepath of the audiofile.`,
 	SuggestFor: []string{"add"},
 	RunE: func(cmd *cobra.Command, args []string) error {
 		verbose, _ := cmd.Flags().GetBool("verbose")
-		client := &http.Client{
-			Timeout: 15 * time.Second,
-		}
 		var err error
 		var p = &pterm.ProgressbarPrinter{}
 		if utils.IsAtty() {
@@ -88,7 +83,7 @@ filepath of the audiofile.`,
 			pterm.Success.Printf("Sending request: %s %s...", http.MethodPost, path)
 			p.Increment()
 		}
-		resp, err := client.Do(req)
+		resp, err := getClient.Do(req)
 		if err != nil {
 			return utils.Error("\n  %v\n  check configuration to ensure properly configured hostname and port\n  or check that api is running", err, verbose)
 		}
@@ -113,9 +108,11 @@ filepath of the audiofile.`,
 			p.Increment()
 		}
 		if utils.IsAtty() {
+			fmt.Fprintf(cmd.OutOrStdout(), fmt.Sprintf(" Successfully uploaded!\n Audiofile ID: %s", string(b)))
 			fmt.Println(checkMark, " Successfully uploaded!")
 			fmt.Println(checkMark, " Audiofile ID: ", string(b))
 		} else {
+			fmt.Fprintf(cmd.OutOrStdout(), string(b))
 			fmt.Println(string(b))
 		}
 		return nil

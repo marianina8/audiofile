@@ -1,6 +1,5 @@
-/*
-Copyright © 2022 NAME HERE <EMAIL ADDRESS>
-*/
+//go:build free || pro
+
 package cmd
 
 import (
@@ -10,7 +9,6 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
-	"time"
 
 	"github.com/marianina8/audiofile/utils"
 	"github.com/spf13/cobra"
@@ -24,9 +22,6 @@ var deleteCmd = &cobra.Command{
 	Long:    `Delete audiofile by id. This command removes the entire folder containing all stored metadata`,
 	Example: `audiofile delete --id 45705eba-9342-4952-8cd4-baa2acc25188`,
 	RunE: func(cmd *cobra.Command, args []string) error {
-		client := &http.Client{
-			Timeout: 15 * time.Second,
-		}
 		var err error
 		verbose, _ := cmd.Flags().GetBool("verbose")
 		id, _ := cmd.Flags().GetString("id")
@@ -40,12 +35,12 @@ var deleteCmd = &cobra.Command{
 		path := fmt.Sprintf("http://%s:%d/delete?%s", viper.Get("cli.hostname"), int(viper.Get("cli.port").(float64)), params)
 		payload := &bytes.Buffer{}
 
-		req, err := http.NewRequest(http.MethodGet, path, payload)
+		req, err := http.NewRequest(http.MethodDelete, path, payload)
 		if err != nil {
 			return utils.Error("\n  %v\n  check configuration to ensure properly configured hostname and port", err, verbose)
 		}
 		utils.LogRequest(verbose, http.MethodGet, path, payload.String())
-		resp, err := client.Do(req)
+		resp, err := getClient.Do(req)
 		if err != nil {
 			return utils.Error("\n  %v\n  check configuration to ensure properly configured hostname and port\n  or check that api is running", err, verbose)
 		}
@@ -60,7 +55,7 @@ var deleteCmd = &cobra.Command{
 		}
 		utils.LogHTTPResponse(verbose, resp, b)
 		if strings.Contains(string(b), "success") {
-			fmt.Printf("\U00002705 Successfully deleted audiofile (%s)!\n", id)
+			fmt.Fprintf(cmd.OutOrStdout(), fmt.Sprintf("\U00002705 Successfully deleted audiofile (%s)!\n", id))
 		} else {
 			fmt.Printf("\U0000274C Unsuccessful delete of audiofile (%s): %s\n", id, string(b))
 		}

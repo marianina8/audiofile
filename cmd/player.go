@@ -1,3 +1,5 @@
+//go:build !free && pro
+
 package cmd
 
 import (
@@ -221,7 +223,7 @@ var playerCmd = &cobra.Command{
 
 		t, err := tcell.New(tcell.ColorMode(terminalapi.ColorMode256))
 		if err != nil {
-			return fmt.Errorf("error creating new tcell:", err.Error)
+			return fmt.Errorf("error creating new tcell: %s", err.Error())
 		}
 		defer t.Close()
 

@@ -1,3 +1,5 @@
+//go:build free || pro
+
 package cmd
 
 import (
@@ -5,7 +7,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
-	"time"
 
 	"github.com/marianina8/audiofile/utils"
 	"github.com/spf13/cobra"
@@ -26,15 +27,13 @@ and transcript if available.`,
 			return err
 		}
 		jsonFormat, _ := cmd.Flags().GetBool("json")
-		err = print(b, jsonFormat)
+		output, err := utils.Print(b, jsonFormat)
+		fmt.Fprintf(cmd.OutOrStdout(), string(output))
 		return err
 	},
 }
 
 func callList(verbose bool) ([]byte, error) {
-	client := &http.Client{
-		Timeout: 15 * time.Second,
-	}
 	path := fmt.Sprintf("http://%s:%d/list", viper.Get("cli.hostname"), int(viper.Get("cli.port").(float64)))
 	payload := &bytes.Buffer{}
 	req, err := http.NewRequest(http.MethodGet, path, payload)
@@ -42,7 +41,7 @@ func callList(verbose bool) ([]byte, error) {
 		return nil, utils.Error("\n  %v\n  check configuration to ensure properly configured hostname and port", err, verbose)
 	}
 	utils.LogRequest(verbose, http.MethodGet, path, payload.String())
-	resp, err := client.Do(req)
+	resp, err := getClient.Do(req)
 	if err != nil {
 		return nil, utils.Error("\n  %v\n  check configuration to ensure properly configured hostname and port\n  or check that api is running", err, verbose)
 	}
@@ -60,7 +59,6 @@ func callList(verbose bool) ([]byte, error) {
 }
 
 func init() {
-	listCmd.Flags().String("id", "", "audiofile id")
 	listCmd.Flags().Bool("json", false, "return json format")
 	rootCmd.AddCommand(listCmd)
 }
