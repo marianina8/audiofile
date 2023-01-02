@@ -27,8 +27,7 @@ and transcript if available.`,
 			return err
 		}
 		jsonFormat, _ := cmd.Flags().GetBool("json")
-		output, err := utils.Print(b, jsonFormat)
-		fmt.Fprintf(cmd.OutOrStdout(), string(output))
+		_, err = utils.Print(b, jsonFormat)
 		return err
 	},
 }

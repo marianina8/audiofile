@@ -1,8 +1,11 @@
+//go:build free || pro
+
 package utils
 
 import (
 	"encoding/json"
 	"fmt"
+	"runtime"
 
 	"github.com/marianina8/audiofile/models"
 )
@@ -28,7 +31,7 @@ func Print(b []byte, jsonFormat bool) ([]byte, error) {
 		if err != nil {
 			return b, fmt.Errorf("\n  printing table: %v\n  ", err)
 		}
-		if IsAtty() {
+		if IsAtty() && runtime.GOOS != "windows" {
 			err = Pager(tableData)
 			if err != nil {
 				return b, fmt.Errorf("\n  paging: %v\n  ", err)
