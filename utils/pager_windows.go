@@ -1,4 +1,4 @@
-//go:build free || pro
+//go:build windows && (free || pro || profile)
 
 package utils
 

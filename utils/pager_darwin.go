@@ -1,4 +1,4 @@
-//go:build free || pro
+//go:build darwin && (free || pro || profile)
 
 package utils
 
