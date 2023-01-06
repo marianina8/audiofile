@@ -9,8 +9,9 @@ go build -o audiofile-api cmd/api/main.go
 
 ## Within the root of the audiofile folder, to start the API:
 ./audiofile-api
+
 ### NOTE
-To change the default port, 80, pass in the new port value with the `-p` flag.
+To change the default port, 8000, pass in the new port value with the `-p` flag.
 
 ## To call the audiofile command line interface:
 ./audiofile-cli
