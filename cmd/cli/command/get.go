@@ -61,6 +61,7 @@ func (cmd *GetCommand) Run() error {
 
 	b, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
+		fmt.Println("error reading response: ", err.Error())
 		return err
 	}
 	fmt.Println(string(b))
