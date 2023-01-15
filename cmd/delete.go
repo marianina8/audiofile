@@ -27,6 +27,7 @@ var deleteCmd = &cobra.Command{
 			Timeout: 15 * time.Second,
 		}
 		var err error
+		silence, _ := cmd.Flags().GetBool("silence")
 		id, _ := cmd.Flags().GetString("id")
 		if id == "" {
 			id, err = utils.AskForID()
@@ -42,8 +43,9 @@ var deleteCmd = &cobra.Command{
 		if err != nil {
 			return err
 		}
-
-		fmt.Printf("Sending request: %s %s %s...\n", http.MethodGet, path, payload)
+		if !silence {
+			fmt.Printf("Sending request: %s %s %s...\n", http.MethodGet, path, payload)
+		}
 		resp, err := client.Do(req)
 		if err != nil {
 			return err
@@ -57,9 +59,9 @@ var deleteCmd = &cobra.Command{
 		if err != nil {
 			return err
 		}
-		if strings.Contains(string(b), "success") {
+		if strings.Contains(string(b), "success") && !silence {
 			fmt.Printf("\U00002705 Successfully deleted audiofile (%s)!\n", id)
-		} else {
+		} else if !silence {
 			fmt.Printf("\U0000274C Unsuccessful delete of audiofile (%s): %s\n", id, string(b))
 		}
 		return nil
@@ -68,5 +70,6 @@ var deleteCmd = &cobra.Command{
 
 func init() {
 	deleteCmd.Flags().String("id", "", "audiofile id")
+	getCmd.Flags().Bool("silence", false, "silence output")
 	rootCmd.AddCommand(deleteCmd)
 }
