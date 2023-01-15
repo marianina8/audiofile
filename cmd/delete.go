@@ -35,6 +35,10 @@ var deleteCmd = &cobra.Command{
 				return err
 			}
 		}
+		confirmed := utils.Confirm("Confirm you'd like to delete audiofile with matching id: " + id)
+		if !confirmed {
+			return nil
+		}
 		params := "id=" + url.QueryEscape(id)
 		path := fmt.Sprintf("http://%s:%d/delete?%s", viper.Get("cli.hostname"), int(viper.Get("cli.port").(float64)), params)
 		payload := &bytes.Buffer{}
