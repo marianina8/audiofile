@@ -3,6 +3,7 @@ package models
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"strconv"
 
 	"github.com/fatih/color"
@@ -55,6 +56,18 @@ func (list *AudioList) Table() (string, error) {
 		)
 	}
 	return pterm.DefaultTable.WithHasHeader().WithData(data).Srender()
+}
+
+func (audio *Audio) Plain() string {
+	return fmt.Sprintf("Id,Path,Tags,Transcript\n%s,%s,%v,%s\n", audio.Id, audio.Path, audio.Metadata.Tags, audio.Metadata.Transcript)
+}
+
+func (list *AudioList) Plain() string {
+	plaintext := ""
+	for _, audio := range *list {
+		plaintext += audio.Plain()
+	}
+	return fmt.Sprintf("Id,Path,Tags,Transcript\n%s\n", plaintext)
 }
 
 func (audio *Audio) Table() (string, error) {

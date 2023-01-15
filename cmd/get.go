@@ -26,8 +26,13 @@ var getCmd = &cobra.Command{
 			return err
 		}
 		jsonFormat, _ := cmd.Flags().GetBool("json")
+		plainFormat, _ := cmd.Flags().GetBool("plain")
 		if jsonFormat {
 			fmt.Println(string(b))
+		} else if plainFormat {
+			var audio models.Audio
+			json.Unmarshal(b, &audio)
+			fmt.Print(audio.Plain())
 		} else {
 			var audio models.Audio
 			json.Unmarshal(b, &audio)
@@ -44,6 +49,7 @@ var getCmd = &cobra.Command{
 func init() {
 	getCmd.Flags().String("id", "", "audiofile id")
 	getCmd.Flags().Bool("json", false, "return json format")
+	getCmd.Flags().Bool("plain", false, "return plain format")
 	rootCmd.AddCommand(getCmd)
 }
 

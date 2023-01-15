@@ -58,6 +58,7 @@ var searchCmd = &cobra.Command{
 			return err
 		}
 		jsonFormat, _ := cmd.Flags().GetBool("json")
+		plainFormat, _ := cmd.Flags().GetBool("plain")
 		if jsonFormat {
 			if utils.IsAtty() {
 				err = utils.Pager(string(b))
@@ -66,6 +67,17 @@ var searchCmd = &cobra.Command{
 				}
 			} else {
 				fmt.Println(string(b))
+			}
+		} else if plainFormat {
+			var audios models.AudioList
+			json.Unmarshal(b, &audios)
+			if utils.IsAtty() {
+				err = utils.Pager(audios.Plain())
+				if err != nil {
+					return err
+				}
+			} else {
+				fmt.Println(audios.Plain())
 			}
 		} else {
 			var audios models.AudioList
@@ -90,5 +102,6 @@ var searchCmd = &cobra.Command{
 func init() {
 	searchCmd.Flags().String("value", "", "string to search for in metadata")
 	searchCmd.Flags().Bool("json", false, "return json format")
+	searchCmd.Flags().Bool("plain", false, "return plain format")
 	rootCmd.AddCommand(searchCmd)
 }
