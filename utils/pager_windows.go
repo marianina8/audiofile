@@ -1,3 +1,5 @@
+//go:build windows
+
 package utils
 
 import (
@@ -7,7 +9,7 @@ import (
 )
 
 func Pager(data string) error {
-	lessCmd := exec.Command("less", "-r")
+	lessCmd := exec.Command("cmd", "/C", "more")
 	lessCmd.Stdin = strings.NewReader(data)
 	lessCmd.Stdout = os.Stdout
 	lessCmd.Stderr = os.Stderr
