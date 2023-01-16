@@ -10,7 +10,7 @@ import (
 )
 
 func play(audiofilePath string, verbose, disableOutput bool) (int, error) {
-	cmd := exec.Command("start", audiofilePath)
+	cmd := exec.Command("cmd", "/C", "start", audiofilePath)
 	if err := cmd.Start(); err != nil {
 		return 0, utils.Error("\n  starting start command: %v", err, verbose)
 	}
