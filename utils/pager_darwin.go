@@ -1,3 +1,5 @@
+//go:build darwin && (free || pro || profile)
+
 package utils
 
 import (
