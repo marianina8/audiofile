@@ -37,7 +37,7 @@ filepath of the audiofile.`,
 		}
 		var err error
 		var p = &pterm.ProgressbarPrinter{}
-		if utils.IsAtty() {
+		if utils.IsaTTY() {
 			p, _ = pterm.DefaultProgressbar.WithTotal(4).WithTitle("Initiating upload...").Start()
 		}
 		filename, _ := cmd.Flags().GetString("filename")
@@ -64,14 +64,14 @@ filepath of the audiofile.`,
 		if err != nil {
 			return err
 		}
-		if utils.IsAtty() {
+		if utils.IsaTTY() {
 			p.UpdateTitle("Creating multipart writer...")
 		}
 		err = multipartWriter.Close()
 		if err != nil {
 			return err
 		}
-		if utils.IsAtty() {
+		if utils.IsaTTY() {
 			pterm.Success.Println("Created multipart writer")
 			p.Increment()
 			p.UpdateTitle("Sending request...")
@@ -82,7 +82,7 @@ filepath of the audiofile.`,
 		}
 
 		req.Header.Set("Content-Type", multipartWriter.FormDataContentType())
-		if utils.IsAtty() {
+		if utils.IsaTTY() {
 			pterm.Success.Printf("Sending request: %s %s...", http.MethodPost, path)
 			p.Increment()
 		}
@@ -91,7 +91,7 @@ filepath of the audiofile.`,
 			return err
 		}
 		defer resp.Body.Close()
-		if utils.IsAtty() {
+		if utils.IsaTTY() {
 			p.UpdateTitle("Receive response...")
 			pterm.Success.Println("Receive response...")
 			p.Increment()
@@ -104,12 +104,12 @@ filepath of the audiofile.`,
 		if err != nil {
 			return err
 		}
-		if utils.IsAtty() {
+		if utils.IsaTTY() {
 			p.UpdateTitle("Process response...")
 			pterm.Success.Println("Process response...")
 			p.Increment()
 		}
-		if utils.IsAtty() {
+		if utils.IsaTTY() {
 			fmt.Println(checkMark, " Successfully uploaded!")
 			fmt.Println(checkMark, " Audiofile ID: ", string(body))
 		} else {

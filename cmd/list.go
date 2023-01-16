@@ -47,7 +47,7 @@ and transcript if available.`,
 		jsonFormat, _ := cmd.Flags().GetBool("json")
 		plainFormat, _ := cmd.Flags().GetBool("plain")
 		if jsonFormat {
-			if utils.IsAtty() {
+			if utils.IsaTTY() {
 				err = utils.Pager(string(b))
 				if err != nil {
 					return err
@@ -58,7 +58,7 @@ and transcript if available.`,
 		} else if plainFormat {
 			var audios models.AudioList
 			json.Unmarshal(b, &audios)
-			if utils.IsAtty() {
+			if utils.IsaTTY() {
 				err = utils.Pager(audios.Plain())
 				if err != nil {
 					return err
@@ -73,7 +73,7 @@ and transcript if available.`,
 			if err != nil {
 				return err
 			}
-			if utils.IsAtty() {
+			if utils.IsaTTY() {
 				err = utils.Pager(tableData)
 				if err != nil {
 					return err
