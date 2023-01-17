@@ -44,7 +44,7 @@ filepath of the audiofile.`,
 				return utils.Error("\n  %v\n  try again and enter a filename", err, verbose)
 			}
 		}
-		path := fmt.Sprintf("http://%s:%d/upload", viper.Get("cli.hostname"), int(viper.Get("cli.port").(float64)))
+		path := fmt.Sprintf("http://%s:%d/upload", viper.Get("cli.hostname"), viper.Get("cli.port").(int))
 		payload := &bytes.Buffer{}
 		multipartWriter := multipart.NewWriter(payload)
 		file, err := os.Open(filename)

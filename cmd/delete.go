@@ -32,7 +32,7 @@ var deleteCmd = &cobra.Command{
 			}
 		}
 		params := "id=" + url.QueryEscape(id)
-		path := fmt.Sprintf("http://%s:%d/delete?%s", viper.Get("cli.hostname"), int(viper.Get("cli.port").(float64)), params)
+		path := fmt.Sprintf("http://%s:%d/delete?%s", viper.Get("cli.hostname"), viper.Get("cli.port").(int), params)
 		payload := &bytes.Buffer{}
 
 		req, err := http.NewRequest(http.MethodDelete, path, payload)
