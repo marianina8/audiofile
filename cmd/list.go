@@ -34,7 +34,7 @@ and transcript if available.`,
 }
 
 func callList(verbose bool) ([]byte, error) {
-	path := fmt.Sprintf("http://%s:%d/list", viper.Get("cli.hostname"), viper.Get("cli.port").(int))
+	path := fmt.Sprintf("http://%s:%d/list", viper.Get("cli.hostname"), viper.GetInt("cli.port"))
 	payload := &bytes.Buffer{}
 	req, err := http.NewRequest(http.MethodGet, path, payload)
 	if err != nil {
