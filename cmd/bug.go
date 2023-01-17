@@ -14,9 +14,9 @@ import (
 
 // bugCmd represents the bug command
 var bugCmd = &cobra.Command{
-	Use:   "bug",
-	Short: "Submit a bug",
-	Long:  "Bug opens the default browser to start a bug report which will include useful system information.",
+	Use:     "bug",
+	Short:   "Submit a bug",
+	Long:    "Bug opens the default browser to start a bug report which will include useful system information.",
 	Example: `audiofile bug`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		if len(args) > 0 {
@@ -31,6 +31,7 @@ var bugCmd = &cobra.Command{
 
 		body := buf.String()
 		url := "https://github.com/marianina8/audiofile/issues/new?title=Bug Report&body=" + url.QueryEscape(body)
+		// we print if the browser fails to open
 		if !openBrowser(url) {
 			fmt.Print("Please file a new issue at https://github.com/marianina8/audiofile/issues/new using this template:\n\n")
 			fmt.Print(body)
