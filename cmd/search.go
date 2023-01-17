@@ -36,7 +36,7 @@ var searchCmd = &cobra.Command{
 			}
 		}
 		params := "searchFor=" + url.QueryEscape(value)
-		path := fmt.Sprintf("http://%s:%d/search?%s", viper.Get("cli.hostname"), int(viper.Get("cli.port").(float64)), params)
+		path := fmt.Sprintf("http://%s:%d/search?%s", viper.Get("cli.hostname"), viper.GetInt("cli.port"), params)
 		payload := &bytes.Buffer{}
 
 		req, err := http.NewRequest(http.MethodGet, path, payload)
