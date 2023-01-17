@@ -35,7 +35,7 @@ func callList(verbose bool) ([]byte, error) {
 	client := &http.Client{
 		Timeout: 15 * time.Second,
 	}
-	path := fmt.Sprintf("http://%s:%d/list", viper.Get("cli.hostname"), int(viper.Get("cli.port").(float64)))
+	path := fmt.Sprintf("http://%s:%d/list", viper.Get("cli.hostname"), viper.GetInt("cli.port"))
 	payload := &bytes.Buffer{}
 	req, err := http.NewRequest(http.MethodGet, path, payload)
 	if err != nil {
