@@ -20,9 +20,9 @@ import (
 
 // searchCmd represents the search command
 var searchCmd = &cobra.Command{
-	Use:   "search",
-	Short: "Command to search for audiofiles by string",
-	Long:  `Command to search for audiofiles by search string within the metadata file.  Search string is not case sensitive`,
+	Use:     "search",
+	Short:   "Command to search for audiofiles by string",
+	Long:    `Command to search for audiofiles by search string within the metadata file.  Search string is not case sensitive`,
 	Example: `./bin/audiofile search --value electronic`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		verbose, _ := cmd.Flags().GetBool("verbose")
@@ -38,7 +38,7 @@ var searchCmd = &cobra.Command{
 			}
 		}
 		params := "searchFor=" + url.QueryEscape(value)
-		path := fmt.Sprintf("http://%s:%d/search?%s", viper.Get("cli.hostname"), int(viper.Get("cli.port").(float64)), params)
+		path := fmt.Sprintf("http://%s:%d/search?%s", viper.Get("cli.hostname"), viper.GetInt("cli.port"), params)
 		payload := &bytes.Buffer{}
 		utils.Verbose.Info(fmt.Sprintf("sending request: %s %s %s...\n", http.MethodGet, path, payload))
 		req, err := http.NewRequest(http.MethodGet, path, payload)

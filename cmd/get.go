@@ -17,9 +17,9 @@ import (
 
 // getCmd represents the get command
 var getCmd = &cobra.Command{
-	Use:   "get",
-	Short: "Get audio metadata",
-	Long:  `Get audio metadata by audiofile id.  Metadata includes available tags and transcript.`,
+	Use:     "get",
+	Short:   "Get audio metadata",
+	Long:    `Get audio metadata by audiofile id.  Metadata includes available tags and transcript.`,
 	Example: `audiofile get --id 45705eba-9342-4952-8cd4-baa2acc25188`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		verbose, _ := cmd.Flags().GetBool("verbose")
@@ -62,7 +62,7 @@ func getAudioByID(cmd *cobra.Command, verbose bool) ([]byte, error) {
 		}
 	}
 	params := "id=" + url.QueryEscape(id)
-	path := fmt.Sprintf("http://%s:%d/request?%s", viper.Get("cli.hostname"), int(viper.Get("cli.port").(float64)), params)
+	path := fmt.Sprintf("http://%s:%d/request?%s", viper.Get("cli.hostname"), viper.GetInt("cli.port"), params)
 	payload := &bytes.Buffer{}
 	req, err := http.NewRequest(http.MethodGet, path, payload)
 	if err != nil {
