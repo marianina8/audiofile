@@ -13,15 +13,15 @@ install-linux-amd64-free:
     GOOS=linux GOARCH=amd64 go install -tags "linux free" github.com/marianina8/audiofile 
 
 build-darwin-free:
-	go build -tags "darwin free" -o builds/free/darwin/audiofile main.go
+	GOOS=darwin GOARCH=amd64 go build -tags "darwin free" -o builds/free/darwin/audiofile main.go
 	chmod +x builds/free/darwin/audiofile
 
 build-darwin-pro:
-	go build -tags "darwin pro" -o builds/pro/darwin/audiofile main.go
+	GOOS=darwin GOARCH=amd64 go build -tags "darwin pro" -o builds/pro/darwin/audiofile main.go
 	chmod +x builds/pro/darwin/audiofile
 
 build-darwin-pro-profile:
-	go build -tags "darwin pro profile" -o builds/profile/darwin/audiofile main.go
+	GOOS=darwin GOARCH=amd64 go build -tags "darwin pro profile" -o builds/profile/darwin/audiofile main.go
 	chmod +x builds/profile/darwin/audiofile
 
 build-linux-free:

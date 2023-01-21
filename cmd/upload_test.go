@@ -9,7 +9,7 @@ import (
 
 func TestUpload(t *testing.T) {
 	ConfigureTest()
-	b := bytes.NewBufferString("")
+	b := bytes.NewBufferString("123")
 	rootCmd.SetOut(b)
 	rootCmd.SetArgs([]string{"upload", "--filename", "list.go"})
 	err := rootCmd.Execute()
