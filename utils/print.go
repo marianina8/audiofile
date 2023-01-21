@@ -18,6 +18,7 @@ func Print(b []byte, jsonFormat bool) ([]byte, error) {
 			}
 		} else {
 			fmt.Println(string(b))
+			return b, nil
 		}
 	} else {
 		var audios models.AudioList
@@ -32,10 +33,11 @@ func Print(b []byte, jsonFormat bool) ([]byte, error) {
 		if IsAtty() && runtime.GOOS != "windows" {
 			err = Pager(tableData)
 			if err != nil {
-				return b, fmt.Errorf("\n  paging: %v\n  ", err)
+				return []byte(tableData), fmt.Errorf("\n  paging: %v\n  ", err)
 			}
 		} else {
 			fmt.Println(tableData)
+			return []byte(tableData), nil
 		}
 	}
 	return b, nil

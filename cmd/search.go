@@ -53,12 +53,12 @@ var searchCmd = &cobra.Command{
 			return utils.Error("\n  reading response: %v\n  ", err, verbose)
 		}
 		utils.LogHTTPResponse(verbose, resp, b)
-		jsonFormat, _ := cmd.Flags().GetBool("json")
+		jsonFormat, err := cmd.Flags().GetBool("json")
 		_, err = utils.Print(b, jsonFormat)
 		if err != nil {
 			return utils.Error("\n printing result: %v", err, verbose)
 		}
-		//fmt.Fprintf(cmd.OutOrStdout(), string(output))
+		fmt.Fprintf(cmd.OutOrStdout(), string(b))
 		return nil
 	},
 }
