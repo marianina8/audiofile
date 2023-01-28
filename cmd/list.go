@@ -27,8 +27,11 @@ and transcript if available.`,
 			return err
 		}
 		jsonFormat, _ := cmd.Flags().GetBool("json")
-		_, err = utils.Print(b, jsonFormat)
-		return err
+		formatedBytes, err := utils.Print(b, jsonFormat)
+		if err != nil {
+			fmt.Fprintf(cmd.OutOrStdout(), string(formatedBytes))
+		}
+		return nil
 	},
 }
 

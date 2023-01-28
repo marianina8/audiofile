@@ -17,25 +17,45 @@ func Print(b []byte, jsonFormat bool) ([]byte, error) {
 				return b, fmt.Errorf("\n  paging: %v\n  ", err)
 			}
 		} else {
-			fmt.Println(string(b))
+			return b, fmt.Errorf("not a tty")
 		}
 	} else {
 		var audios models.AudioList
+		var audio models.Audio
 		err := json.Unmarshal(b, &audios)
-		if err != nil {
-			return b, fmt.Errorf("\n  unmarshalling: %v\n  ", err)
-		}
-		tableData, err := audios.Table()
-		if err != nil {
-			return b, fmt.Errorf("\n  printing table: %v\n  ", err)
-		}
-		if IsAtty() && runtime.GOOS != "windows" {
-			err = Pager(tableData)
+		if err == nil {
+			tableData, err := audios.Table()
 			if err != nil {
-				return b, fmt.Errorf("\n  paging: %v\n  ", err)
+				return b, fmt.Errorf("\n  printing table: %v\n  ", err)
+			}
+
+			if IsAtty() && runtime.GOOS != "windows" {
+				err = Pager(tableData)
+				if err != nil {
+					return b, fmt.Errorf("\n  paging: %v\n  ", err)
+				}
+
+			} else {
+				return b, fmt.Errorf("not a tty")
 			}
 		} else {
-			fmt.Println(tableData)
+			err := json.Unmarshal(b, &audio)
+			if err == nil {
+				tableData, err := audio.Table()
+				if err != nil {
+					return b, fmt.Errorf("\n  printing table: %v\n  ", err)
+				}
+				if IsAtty() && runtime.GOOS != "windows" {
+					err = Pager(tableData)
+					if err != nil {
+						return b, fmt.Errorf("\n  paging: %v\n  ", err)
+					}
+				} else {
+					return b, fmt.Errorf("not a tty")
+				}
+			} else {
+				return b, fmt.Errorf("unmarshalling error: %v", err)
+			}
 		}
 	}
 	return b, nil

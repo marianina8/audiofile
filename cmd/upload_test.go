@@ -1,3 +1,5 @@
+//go:build !int
+
 package cmd
 
 import (
@@ -9,7 +11,7 @@ import (
 
 func TestUpload(t *testing.T) {
 	ConfigureTest()
-	b := bytes.NewBufferString("123")
+	b := bytes.NewBufferString("")
 	rootCmd.SetOut(b)
 	rootCmd.SetArgs([]string{"upload", "--filename", "list.go"})
 	err := rootCmd.Execute()
