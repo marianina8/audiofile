@@ -9,11 +9,11 @@ import (
 )
 
 func Pager(data string) error {
-	lessCmd := exec.Command("cmd", "/C", "more")
-	lessCmd.Stdin = strings.NewReader(data)
-	lessCmd.Stdout = os.Stdout
-	lessCmd.Stderr = os.Stderr
-	err := lessCmd.Run()
+	moreCmd := exec.Command("cmd", "/C", "more")
+	moreCmd.Stdin = strings.NewReader(data)
+	moreCmd.Stdout = os.Stdout
+	moreCmd.Stderr = os.Stderr
+	err := moreCmd.Run()
 	if err != nil {
 		return err
 	}
