@@ -337,7 +337,9 @@ var playerCmd = &cobra.Command{
 		quitter := func(k *terminalapi.Keyboard) {
 			if k.Key == 'q' || k.Key == 'Q' {
 				proc, _ := os.FindProcess(pID)
-				proc.Kill()
+				if proc != nil {
+					proc.Kill()
+				}
 				cancel()
 			}
 		}
