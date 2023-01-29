@@ -49,14 +49,14 @@ type AudioList []Audio
 
 func (list *AudioList) Table() (string, error) {
 	data := pterm.TableData{header}
-	if runtime.GOOS == "windows" {
-		pterm.DisableColor()
-	}
 	for _, audio := range *list {
 		data = append(
 			data,
 			row(audio),
 		)
+	}
+	if runtime.GOOS == "windows" {
+		pterm.DisableColor()
 	}
 	return pterm.DefaultTable.WithHasHeader().WithData(data).Srender()
 }

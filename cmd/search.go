@@ -2,14 +2,12 @@ package cmd
 
 import (
 	"bytes"
-	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/url"
 	"time"
 
-	"github.com/marianina8/audiofile/models"
 	"github.com/marianina8/audiofile/utils"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -70,34 +68,4 @@ func init() {
 	searchCmd.Flags().String("value", "", "string to search for in metadata")
 	searchCmd.Flags().Bool("json", false, "return json format")
 	rootCmd.AddCommand(searchCmd)
-}
-
-func print(b []byte, jsonFormat bool) error {
-	var err error
-	if jsonFormat {
-		if utils.IsAtty() {
-			err = utils.Pager(string(b))
-			if err != nil {
-				return fmt.Errorf("\n  paging: %v\n  ", err)
-			}
-		} else {
-			fmt.Println(string(b))
-		}
-	} else {
-		var audios models.AudioList
-		json.Unmarshal(b, &audios)
-		tableData, err := audios.Table()
-		if err != nil {
-			return fmt.Errorf("\n  printing table: %v\n  ", err)
-		}
-		if utils.IsAtty() {
-			err = utils.Pager(tableData)
-			if err != nil {
-				return fmt.Errorf("\n  paging: %v\n  ", err)
-			}
-		} else {
-			fmt.Println(tableData)
-		}
-	}
-	return nil
 }
