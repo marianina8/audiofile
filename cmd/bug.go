@@ -1,6 +1,3 @@
-/*
-Copyright © 2022 NAME HERE <EMAIL ADDRESS>
-*/
 package cmd
 
 import (
@@ -14,9 +11,9 @@ import (
 
 // bugCmd represents the bug command
 var bugCmd = &cobra.Command{
-	Use:   "bug",
-	Short: "Submit a bug",
-	Long:  "Bug opens the default browser to start a bug report which will include useful system information.",
+	Use:     "bug",
+	Short:   "Submit a bug",
+	Long:    "Bug opens the default browser to start a bug report which will include useful system information.",
 	Example: `audiofile bug`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		if len(args) > 0 {

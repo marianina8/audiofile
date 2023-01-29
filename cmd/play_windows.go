@@ -4,7 +4,10 @@ package cmd
 
 import (
 	"fmt"
+	"github.com/marianina8/audiofile/utils"
+	"github.com/pterm/pterm"
 	"os/exec"
+	"runtime"
 )
 
 func play(audiofilePath string, verbose, disableOutput bool) (int, error) {
@@ -14,13 +17,17 @@ func play(audiofilePath string, verbose, disableOutput bool) (int, error) {
 	}
 	if !disableOutput {
 		spinnerInfo := &pterm.SpinnerPrinter{}
-		if utils.IsAtty() {
+		if utils.IsAtty() && runtime.GOOS != "windows" {
 			spinnerInfo, _ = pterm.DefaultSpinner.Start("Enjoy the music...")
-		}	err := cmd.Wait()
+		}
+		if runtime.GOOS == "windows" {
+			fmt.Println("Enjoy the music...")
+		}
+		err := cmd.Wait()
 		if err != nil {
 			return 0, utils.Error("\n  running start command: %v", err, verbose)
 		}
-		if utils.IsAtty() {
+		if utils.IsAtty() && runtime.GOOS != "windows" {
 			spinnerInfo.Stop()
 		}
 		return 0, nil

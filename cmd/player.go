@@ -31,7 +31,7 @@ var audiofileID = -1
 var pID = 0
 
 func newStopButton() (*button.Button, error) {
-	playButton, err := button.New("Stop", func() error {
+	stopButton, err := button.New("Stop", func() error {
 		go func() error {
 			proc, _ := os.FindProcess(pID)
 			proc.Kill()
@@ -44,16 +44,18 @@ func newStopButton() (*button.Button, error) {
 		button.GlobalKey('s'),
 	)
 	if err != nil {
-		return playButton, fmt.Errorf("%v", err)
+		return stopButton, fmt.Errorf("%v", err)
 	}
-	return playButton, nil
+	return stopButton, nil
 }
 
 func newPlayButton(audioList *models.AudioList, playID <-chan int) (*button.Button, error) {
 	playButton, err := button.New("Play", func() error {
 		if pID != 0 {
 			proc, _ := os.FindProcess(pID)
-			proc.Kill()
+			if proc != nil {
+				proc.Kill()
+			}
 		}
 		go func() {
 			if audiofileID <= len(*audioList)-1 && audiofileID >= 0 {
@@ -221,7 +223,7 @@ var playerCmd = &cobra.Command{
 
 		t, err := tcell.New(tcell.ColorMode(terminalapi.ColorMode256))
 		if err != nil {
-			return fmt.Errorf("error creating new tcell:", err.Error)
+			return fmt.Errorf("error creating new tcell: %s", err.Error())
 		}
 		defer t.Close()
 
