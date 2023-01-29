@@ -1,5 +1,3 @@
-//go:build !int
-
 package cmd
 
 import (
@@ -31,11 +29,8 @@ func (c *ClientMock) Do(req *http.Request) (*http.Response, error) {
 	switch req.URL.Path {
 	case "/request":
 		return &http.Response{
-			Status:        "200 OK",
-			StatusCode:    200,
-			Proto:         "HTTP/1.1",
-			ProtoMajor:    1,
-			ProtoMinor:    1,
+			Status:        "OK",
+			StatusCode:    http.StatusOK,
 			Body:          ioutil.NopCloser(bytes.NewBufferString(string(getBytes))),
 			ContentLength: int64(len(getBytes)),
 			Request:       req,
@@ -43,11 +38,8 @@ func (c *ClientMock) Do(req *http.Request) (*http.Response, error) {
 		}, nil
 	case "/upload":
 		return &http.Response{
-			Status:        "200 OK",
-			StatusCode:    200,
-			Proto:         "HTTP/1.1",
-			ProtoMajor:    1,
-			ProtoMinor:    1,
+			Status:        "OK",
+			StatusCode:    http.StatusOK,
 			Body:          ioutil.NopCloser(bytes.NewBufferString("123")),
 			ContentLength: int64(len("123")),
 			Request:       req,
@@ -55,11 +47,8 @@ func (c *ClientMock) Do(req *http.Request) (*http.Response, error) {
 		}, nil
 	case "/list":
 		return &http.Response{
-			Status:        "200 OK",
-			StatusCode:    200,
-			Proto:         "HTTP/1.1",
-			ProtoMajor:    1,
-			ProtoMinor:    1,
+			Status:        "OK",
+			StatusCode:    http.StatusOK,
 			Body:          ioutil.NopCloser(bytes.NewBufferString(string(listBytes))),
 			ContentLength: int64(len(listBytes)),
 			Request:       req,
@@ -67,11 +56,8 @@ func (c *ClientMock) Do(req *http.Request) (*http.Response, error) {
 		}, nil
 	case "/delete":
 		return &http.Response{
-			Status:        "200 OK",
-			StatusCode:    200,
-			Proto:         "HTTP/1.1",
-			ProtoMajor:    1,
-			ProtoMinor:    1,
+			Status:        "OK",
+			StatusCode:    http.StatusOK,
 			Body:          ioutil.NopCloser(bytes.NewBufferString("successfully deleted audio with id: 456")),
 			ContentLength: int64(len("successfully deleted audio with id: 456")),
 			Request:       req,
@@ -79,11 +65,8 @@ func (c *ClientMock) Do(req *http.Request) (*http.Response, error) {
 		}, nil
 	case "/search":
 		return &http.Response{
-			Status:        "200 OK",
-			StatusCode:    200,
-			Proto:         "HTTP/1.1",
-			ProtoMajor:    1,
-			ProtoMinor:    1,
+			Status:        "OK",
+			StatusCode:    http.StatusOK,
 			Body:          ioutil.NopCloser(bytes.NewBufferString(string(searchBytes))),
 			ContentLength: int64(len(searchBytes)),
 			Request:       req,
