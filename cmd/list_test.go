@@ -15,7 +15,7 @@ func TestList(t *testing.T) {
 	ConfigureTest()
 	b := bytes.NewBufferString("")
 	rootCmd.SetOut(b)
-	rootCmd.SetArgs([]string{"list"})
+	rootCmd.SetArgs([]string{"list", "--json"})
 	err := rootCmd.Execute()
 	if err != nil {
 		fmt.Println("err: ", err)

@@ -11,6 +11,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"runtime"
 
 	"github.com/marianina8/audiofile/utils"
 	"github.com/pterm/pterm"
@@ -61,17 +62,21 @@ filepath of the audiofile.`,
 		if err != nil {
 			return utils.Error("\n  %v\n  problems preparing file for upload", err, verbose)
 		}
-		if utils.IsAtty() {
+		if utils.IsAtty() && runtime.GOOS != "windows" {
 			p.UpdateTitle("Creating multipart writer...")
+		} else {
+			fmt.Println("Creating multipart writer...")
 		}
 		err = multipartWriter.Close()
 		if err != nil {
 			return utils.Error("\n  %v\n  problems preparing file for upload", err, verbose)
 		}
-		if utils.IsAtty() {
+		if utils.IsAtty() && runtime.GOOS != "windows" {
 			pterm.Success.Println("Created multipart writer")
 			p.Increment()
 			p.UpdateTitle("Sending request...")
+		} else {
+			fmt.Println("Sending request...")
 		}
 		req, err := http.NewRequest(http.MethodPost, path, payload)
 		if err != nil {
@@ -79,19 +84,23 @@ filepath of the audiofile.`,
 		}
 		utils.LogRequest(verbose, http.MethodPost, path, payload.String())
 		req.Header.Set("Content-Type", multipartWriter.FormDataContentType())
-		if utils.IsAtty() {
+		if utils.IsAtty() && runtime.GOOS != "windows" {
 			pterm.Success.Printf("Sending request: %s %s...", http.MethodPost, path)
 			p.Increment()
+		} else {
+			fmt.Printf("Sending request: %s %s...\n", http.MethodPost, path)
 		}
 		resp, err := getClient.Do(req)
 		if err != nil {
 			return utils.Error("\n  %v\n  check configuration to ensure properly configured hostname and port\n  or check that api is running", err, verbose)
 		}
 		defer resp.Body.Close()
-		if utils.IsAtty() {
+		if utils.IsAtty() && runtime.GOOS != "windows" {
 			p.UpdateTitle("Receive response...")
 			pterm.Success.Println("Receive response...")
 			p.Increment()
+		} else {
+			fmt.Println("Receive response...")
 		}
 		err = utils.CheckResponse(resp)
 		if err != nil {
@@ -102,18 +111,17 @@ filepath of the audiofile.`,
 			return utils.Error("\n  reading response: %v\n  ", err, verbose)
 		}
 		utils.LogHTTPResponse(verbose, resp, b)
-		if utils.IsAtty() {
+		if utils.IsAtty() && runtime.GOOS != "windows" {
 			p.UpdateTitle("Process response...")
 			pterm.Success.Println("Process response...")
 			p.Increment()
+		} else {
+			fmt.Println("Receive response...")
 		}
-		if utils.IsAtty() {
-			fmt.Fprintf(cmd.OutOrStdout(), fmt.Sprintf(" Successfully uploaded!\n Audiofile ID: %s", string(b)))
-			fmt.Println(checkMark, " Successfully uploaded!")
-			fmt.Println(checkMark, " Audiofile ID: ", string(b))
+		if utils.IsAtty() && runtime.GOOS != "windows" {
+			fmt.Fprintf(cmd.OutOrStdout(), fmt.Sprintf("%s Successfully uploaded!\n Audiofile ID: %s", checkMark, string(b)))
 		} else {
 			fmt.Fprintf(cmd.OutOrStdout(), string(b))
-			fmt.Println(string(b))
 		}
 		return nil
 	},

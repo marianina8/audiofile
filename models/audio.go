@@ -3,6 +3,7 @@ package models
 import (
 	"bytes"
 	"encoding/json"
+	"runtime"
 	"strconv"
 
 	"github.com/fatih/color"
@@ -54,11 +55,17 @@ func (list *AudioList) Table() (string, error) {
 			row(audio),
 		)
 	}
+	if runtime.GOOS == "windows" {
+		pterm.DisableColor()
+	}
 	return pterm.DefaultTable.WithHasHeader().WithData(data).Srender()
 }
 
 func (audio *Audio) Table() (string, error) {
 	data := pterm.TableData{header, row(*audio)}
+	if runtime.GOOS == "windows" {
+		pterm.DisableColor()
+	}
 	return pterm.DefaultTable.WithHasHeader().WithData(data).Srender()
 }
 
