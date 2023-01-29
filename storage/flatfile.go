@@ -2,6 +2,7 @@ package storage
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"io/fs"
@@ -25,6 +26,9 @@ func (f FlatFile) GetByID(id string) (*models.Audio, error) {
 		return nil, err
 	}
 	metadataFilePath := filepath.Join(dirname, "audiofile", id, "metadata.json")
+	if _, err := os.Stat(metadataFilePath); errors.Is(err, os.ErrNotExist) {
+		_ = os.Mkdir(metadataFilePath, os.ModePerm)
+	}
 	file, err := ioutil.ReadFile(metadataFilePath)
 	if err != nil {
 		return nil, err

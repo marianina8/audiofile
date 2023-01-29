@@ -119,7 +119,7 @@ filepath of the audiofile.`,
 			fmt.Println("Receive response...")
 		}
 		if utils.IsAtty() && runtime.GOOS != "windows" {
-			fmt.Fprintf(cmd.OutOrStdout(), fmt.Sprintf(" Successfully uploaded!\n Audiofile ID: %s %v", string(b), checkMark))
+			fmt.Fprintf(cmd.OutOrStdout(), fmt.Sprintf("%s Successfully uploaded!\n Audiofile ID: %s", checkMark, string(b)))
 		} else {
 			fmt.Fprintf(cmd.OutOrStdout(), string(b))
 		}
