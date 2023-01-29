@@ -1,6 +1,12 @@
 # audiofile
 In Chapter 12, Cross Compilation Across Different Platforms , we discuss how to cross compile for the three major platforms: darwin, linux, and windows.  We also write a couple scripts to expedite compilation for all possible platforms and architectures.  Visit the Makefile to see all the new commands!
 
+## To run tests:
+make test
+
+## To run tests in verbose mode:
+make test-verbose
+
 ## To generate the audiofile CLI documentation on MacOS:
 make manpages
 
