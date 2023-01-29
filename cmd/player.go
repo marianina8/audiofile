@@ -34,7 +34,9 @@ func newStopButton() (*button.Button, error) {
 	stopButton, err := button.New("Stop", func() error {
 		go func() error {
 			proc, _ := os.FindProcess(pID)
-			proc.Kill()
+			if proc != nil {
+				proc.Kill()
+			}
 			pID = 0
 			return nil
 		}()
@@ -333,7 +335,9 @@ var playerCmd = &cobra.Command{
 		quitter := func(k *terminalapi.Keyboard) {
 			if k.Key == 'q' || k.Key == 'Q' {
 				proc, _ := os.FindProcess(pID)
-				proc.Kill()
+				if proc != nil {
+					proc.Kill()
+				}
 				cancel()
 			}
 		}
