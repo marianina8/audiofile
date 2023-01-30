@@ -44,7 +44,7 @@ var deleteCmd = &cobra.Command{
 		if err != nil {
 			return utils.Error("\n  %v\n  check configuration to ensure properly configured hostname and port", err, verbose)
 		}
-		utils.LogRequest(verbose, http.MethodGet, path, payload.String())
+		utils.LogRequest(verbose, http.MethodDelete, path, payload.String())
 		resp, err := getClient.Do(req)
 		if err != nil {
 			return utils.Error("\n  %v\n  check configuration to ensure properly configured hostname and port\n  or check that api is running", err, verbose)
