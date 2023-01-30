@@ -2,11 +2,13 @@ package cmd
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/http"
 	"time"
 
+	"github.com/marianina8/audiofile/models"
 	"github.com/marianina8/audiofile/utils"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -42,9 +44,15 @@ and transcript if available.`,
 		if err != nil {
 			return err
 		}
-		jsonFormat, _ := cmd.Flags().GetBool("json")
 		plainFormat, _ := cmd.Flags().GetBool("plain")
-		formatedBytes, err := utils.Print(b, jsonFormat, plainFormat)
+		if plainFormat {
+			var audios models.AudioList
+			json.Unmarshal(b, &audios)
+			fmt.Fprintf(cmd.OutOrStdout(), audios.Plain())
+			return nil
+		}
+		jsonFormat, _ := cmd.Flags().GetBool("json")
+		formatedBytes, err := utils.Print(b, jsonFormat)
 		if err != nil {
 			fmt.Fprintf(cmd.OutOrStdout(), string(formatedBytes))
 		}

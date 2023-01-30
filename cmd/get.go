@@ -26,8 +26,14 @@ var getCmd = &cobra.Command{
 			return err
 		}
 		plainFormat, _ := cmd.Flags().GetBool("plain")
+		if plainFormat {
+			var audio models.Audio
+			json.Unmarshal(b, &audio)
+			fmt.Fprintf(cmd.OutOrStdout(), audio.Plain())
+			return nil
+		}
 		jsonFormat, _ := cmd.Flags().GetBool("json")
-		formattedBytes, err := utils.Print(b, jsonFormat, plainFormat)
+		formattedBytes, err := utils.Print(b, jsonFormat)
 		if err != nil {
 			fmt.Fprintf(cmd.OutOrStdout(), string(formattedBytes))
 		}
