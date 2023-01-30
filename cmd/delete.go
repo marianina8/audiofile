@@ -1,6 +1,3 @@
-/*
-Copyright © 2022 NAME HERE <EMAIL ADDRESS>
-*/
 package cmd
 
 import (
@@ -33,7 +30,7 @@ var deleteCmd = &cobra.Command{
 		path := fmt.Sprintf("http://localhost/delete?%s", params)
 		payload := &bytes.Buffer{}
 
-		req, err := http.NewRequest(http.MethodGet, path, payload)
+		req, err := http.NewRequest(http.MethodDelete, path, payload)
 		if err != nil {
 			return err
 		}

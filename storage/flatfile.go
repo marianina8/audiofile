@@ -2,6 +2,7 @@ package storage
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"io/fs"
@@ -25,6 +26,9 @@ func (f FlatFile) GetByID(id string) (*models.Audio, error) {
 		return nil, err
 	}
 	metadataFilePath := filepath.Join(dirname, "audiofile", id, "metadata.json")
+	if _, err := os.Stat(metadataFilePath); errors.Is(err, os.ErrNotExist) {
+		_ = os.Mkdir(metadataFilePath, os.ModePerm)
+	}
 	file, err := ioutil.ReadFile(metadataFilePath)
 	if err != nil {
 		return nil, err
@@ -85,6 +89,9 @@ func (f FlatFile) List() ([]*models.Audio, error) {
 		return nil, err
 	}
 	metadataFilePath := filepath.Join(dirname, "audiofile")
+	if _, err := os.Stat(metadataFilePath); errors.Is(err, os.ErrNotExist) {
+		_ = os.Mkdir(metadataFilePath, os.ModePerm)
+	}
 	files, err := ioutil.ReadDir(metadataFilePath)
 	if err != nil {
 		return nil, err
@@ -108,6 +115,9 @@ func (f FlatFile) Delete(id string) error {
 		return err
 	}
 	audioIDFilePath := filepath.Join(dirname, "audiofile", id)
+	if _, err = os.Stat(audioIDFilePath); os.IsNotExist(err) {
+		return fmt.Errorf("not found: %v", err)
+	}
 	err = os.RemoveAll(audioIDFilePath)
 	if err != nil {
 		return err

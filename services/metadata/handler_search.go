@@ -20,18 +20,18 @@ func (m *MetadataService) searchHandler(res http.ResponseWriter, req *http.Reque
 
 	audioFiles, err := m.Storage.Search(searchFor)
 	if err != nil {
-		res.WriteHeader(500)
+		res.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 	jsonData, err := json.Marshal(audioFiles)
 	if err != nil {
-		res.WriteHeader(500)
+		res.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 	var prettyJSON bytes.Buffer
 	err = json.Indent(&prettyJSON, []byte(jsonData), "", "    ")
 	if err != nil {
-		res.WriteHeader(500)
+		res.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 	io.WriteString(res, prettyJSON.String())

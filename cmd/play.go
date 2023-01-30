@@ -1,6 +1,3 @@
-/*
-Copyright © 2022 NAME HERE <EMAIL ADDRESS>
-*/
 package cmd
 
 import (
@@ -79,7 +76,7 @@ func init() {
 // }
 
 // func windowsPlay(audiofilePath string) {
-// 	cmd := exec.Command("start", audiofilePath)
+// 	cmd := exec.Command("cmd", "/C", "start", audiofilePath)
 // 	if err := cmd.Start(); err != nil {
 // 		panic(err)
 // 	}

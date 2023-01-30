@@ -8,7 +8,7 @@ import (
 )
 
 func play(audiofilePath string) error {
-	cmd := exec.Command("start", audiofilePath)
+	cmd := exec.Command("cmd", "/C", "start", audiofilePath)
 	if err := cmd.Start(); err != nil {
 		return err
 	}
