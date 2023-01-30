@@ -30,6 +30,7 @@ var bugCmd = &cobra.Command{
 
 		body := buf.String()
 		url := "https://github.com/marianina8/audiofile/issues/new?title=Bug Report&body=" + url.QueryEscape(body)
+		// we print if the browser fails to open
 		if !openBrowser(url) {
 			fmt.Print("Please file a new issue at https://github.com/marianina8/audiofile/issues/new using this template:\n\n")
 			fmt.Print(body)
