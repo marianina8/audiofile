@@ -17,7 +17,7 @@ func play(audiofilePath string, verbose, disableOutput bool) (int, error) {
 	}
 	if !disableOutput {
 		spinnerInfo := &pterm.SpinnerPrinter{}
-		if utils.IsAtty() && runtime.GOOS != "windows" {
+		if utils.IsaTTY() && runtime.GOOS != "windows" {
 			spinnerInfo, _ = pterm.DefaultSpinner.Start("Enjoy the music...")
 		}
 		if runtime.GOOS == "windows" {
@@ -27,7 +27,7 @@ func play(audiofilePath string, verbose, disableOutput bool) (int, error) {
 		if err != nil {
 			return 0, utils.Error("\n  running start command: %v", err, verbose)
 		}
-		if utils.IsAtty() && runtime.GOOS != "windows" {
+		if utils.IsaTTY() && runtime.GOOS != "windows" {
 			spinnerInfo.Stop()
 		}
 		return 0, nil

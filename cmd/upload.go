@@ -35,7 +35,7 @@ filepath of the audiofile.`,
 		verbose, _ := cmd.Flags().GetBool("verbose")
 		var err error
 		var p = &pterm.ProgressbarPrinter{}
-		if utils.IsAtty() {
+		if utils.IsaTTY() {
 			p, _ = pterm.DefaultProgressbar.WithTotal(4).WithTitle("Initiating upload...").Start()
 		}
 		filename, _ := cmd.Flags().GetString("filename")
@@ -62,7 +62,7 @@ filepath of the audiofile.`,
 		if err != nil {
 			return utils.Error("\n  %v\n  problems preparing file for upload", err, verbose)
 		}
-		if utils.IsAtty() && runtime.GOOS != "windows" {
+		if utils.IsaTTY() && runtime.GOOS != "windows" {
 			p.UpdateTitle("Creating multipart writer...")
 		} else {
 			fmt.Println("Creating multipart writer...")
@@ -71,7 +71,7 @@ filepath of the audiofile.`,
 		if err != nil {
 			return utils.Error("\n  %v\n  problems preparing file for upload", err, verbose)
 		}
-		if utils.IsAtty() && runtime.GOOS != "windows" {
+		if utils.IsaTTY() && runtime.GOOS != "windows" {
 			pterm.Success.Println("Created multipart writer")
 			p.Increment()
 			p.UpdateTitle("Sending request...")
@@ -84,7 +84,7 @@ filepath of the audiofile.`,
 		}
 		utils.LogRequest(verbose, http.MethodPost, path, payload.String())
 		req.Header.Set("Content-Type", multipartWriter.FormDataContentType())
-		if utils.IsAtty() && runtime.GOOS != "windows" {
+		if utils.IsaTTY() && runtime.GOOS != "windows" {
 			pterm.Success.Printf("Sending request: %s %s...", http.MethodPost, path)
 			p.Increment()
 		} else {
@@ -95,7 +95,7 @@ filepath of the audiofile.`,
 			return utils.Error("\n  %v\n  check configuration to ensure properly configured hostname and port\n  or check that api is running", err, verbose)
 		}
 		defer resp.Body.Close()
-		if utils.IsAtty() && runtime.GOOS != "windows" {
+		if utils.IsaTTY() && runtime.GOOS != "windows" {
 			p.UpdateTitle("Receive response...")
 			pterm.Success.Println("Receive response...")
 			p.Increment()
@@ -111,14 +111,14 @@ filepath of the audiofile.`,
 			return utils.Error("\n  reading response: %v\n  ", err, verbose)
 		}
 		utils.LogHTTPResponse(verbose, resp, b)
-		if utils.IsAtty() && runtime.GOOS != "windows" {
+		if utils.IsaTTY() && runtime.GOOS != "windows" {
 			p.UpdateTitle("Process response...")
 			pterm.Success.Println("Process response...")
 			p.Increment()
 		} else {
 			fmt.Println("Process response...")
 		}
-		if utils.IsAtty() && runtime.GOOS != "windows" {
+		if utils.IsaTTY() && runtime.GOOS != "windows" {
 			fmt.Fprintf(cmd.OutOrStdout(), fmt.Sprintf("%s Successfully uploaded!\n Audiofile ID: %s", checkMark, string(b)))
 		} else {
 			fmt.Fprintf(cmd.OutOrStdout(), string(b))
