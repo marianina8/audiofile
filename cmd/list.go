@@ -27,6 +27,12 @@ and transcript if available.`,
 			return err
 		}
 		plainFormat, _ := cmd.Flags().GetBool("plain")
+		if plainFormat {
+			var audios models.AudioList
+			json.Unmarshal(b, &audios)
+			fmt.Fprintf(cmd.OutOrStdout(), audios.Plain())
+			return nil
+		}
 		jsonFormat, _ := cmd.Flags().GetBool("json")
 		formatedBytes, err := utils.Print(b, jsonFormat)
 		if err != nil {
