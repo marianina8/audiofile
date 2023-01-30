@@ -23,6 +23,7 @@ var deleteCmd = &cobra.Command{
 	Example: `audiofile delete --id 45705eba-9342-4952-8cd4-baa2acc25188`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		var err error
+		silence, _ := cmd.Flags().GetBool("silence")
 		verbose, _ := cmd.Flags().GetBool("verbose")
 		id, _ := cmd.Flags().GetString("id")
 		if id == "" {
@@ -43,7 +44,7 @@ var deleteCmd = &cobra.Command{
 		if err != nil {
 			return utils.Error("\n  %v\n  check configuration to ensure properly configured hostname and port", err, verbose)
 		}
-		utils.LogRequest(verbose, http.MethodGet, path, payload.String())
+		utils.LogRequest(verbose, http.MethodDelete, path, payload.String())
 		resp, err := getClient.Do(req)
 		if err != nil {
 			return utils.Error("\n  %v\n  check configuration to ensure properly configured hostname and port\n  or check that api is running", err, verbose)
