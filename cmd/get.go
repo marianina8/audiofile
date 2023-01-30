@@ -25,6 +25,7 @@ var getCmd = &cobra.Command{
 		if err != nil {
 			return err
 		}
+		jsonFormat, _ := cmd.Flags().GetBool("json")
 		formattedBytes, err := utils.Print(b, jsonFormat)
 		if err != nil {
 			fmt.Fprintf(cmd.OutOrStdout(), string(formattedBytes))
