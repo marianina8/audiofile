@@ -24,7 +24,6 @@ Basic commands include: get, list, and upload.`,
 func Execute() {
 	err := rootCmd.Execute()
 	if err != nil {
-		//os.Stderr.WriteString(err.Error()) - no need to add this, Cobra already outputs error message for us
 		os.Exit(1)
 	}
 }
