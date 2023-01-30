@@ -11,7 +11,7 @@ import (
 func Print(b []byte, jsonFormat bool) ([]byte, error) {
 	var err error
 	if jsonFormat {
-		if IsAtty() {
+		if IsaTTY() {
 			err = Pager(string(b))
 			if err != nil {
 				return b, fmt.Errorf("\n  paging: %v\n  ", err)
@@ -29,7 +29,7 @@ func Print(b []byte, jsonFormat bool) ([]byte, error) {
 				return b, fmt.Errorf("\n  printing table: %v\n  ", err)
 			}
 
-			if IsAtty() && runtime.GOOS != "windows" {
+			if IsaTTY() && runtime.GOOS != "windows" {
 				err = Pager(tableData)
 				if err != nil {
 					return b, fmt.Errorf("\n  paging: %v\n  ", err)
@@ -45,7 +45,7 @@ func Print(b []byte, jsonFormat bool) ([]byte, error) {
 				if err != nil {
 					return b, fmt.Errorf("\n  printing table: %v\n  ", err)
 				}
-				if IsAtty() && runtime.GOOS != "windows" {
+				if IsaTTY() && runtime.GOOS != "windows" {
 					err = Pager(tableData)
 					if err != nil {
 						return b, fmt.Errorf("\n  paging: %v\n  ", err)
