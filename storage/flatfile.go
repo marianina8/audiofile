@@ -69,7 +69,6 @@ func (f FlatFile) Upload(bytes []byte, filename string) (string, string, error) 
 	// copy file to configured storage path by tag name or id
 	dirname, err := os.UserHomeDir()
 	if err != nil {
-		fmt.Println("getting user home dir:", err.Error())
 		return id.String(), "", err
 	}
 	audioDirPath := filepath.Join(dirname, "audiofile", id.String())
@@ -87,6 +86,7 @@ func (f FlatFile) Upload(bytes []byte, filename string) (string, string, error) 
 func (f FlatFile) List() ([]*models.Audio, error) {
 	dirname, err := os.UserHomeDir()
 	if err != nil {
+		fmt.Println("reading user home dir:", err.Error())
 		return nil, err
 	}
 	metadataFilePath := filepath.Join(dirname, "audiofile")
@@ -95,7 +95,6 @@ func (f FlatFile) List() ([]*models.Audio, error) {
 	}
 	files, err := ioutil.ReadDir(metadataFilePath)
 	if err != nil {
-		fmt.Println("reading user home dir:", err.Error())
 		return nil, err
 	}
 	audioFiles := []*models.Audio{}
