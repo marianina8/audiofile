@@ -6,7 +6,7 @@ import (
 	isatty "github.com/mattn/go-isatty"
 )
 
-func IsAtty() bool {
+func IsaTTY() bool {
 	if isatty.IsTerminal(os.Stdout.Fd()) || isatty.IsCygwinTerminal(os.Stdout.Fd()) {
 		return true
 	}
