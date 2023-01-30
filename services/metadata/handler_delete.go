@@ -20,7 +20,7 @@ func (m *MetadataService) deleteHandler(res http.ResponseWriter, req *http.Reque
 	err := m.Storage.Delete(id)
 	if err != nil {
 		if strings.Contains(err.Error(), "not found") {
-			res.WriteHeader(http.StatusInternalServerError)
+			res.WriteHeader(http.StatusNotFound )
 			return
 		}
 		res.WriteHeader(http.StatusInternalServerError)
