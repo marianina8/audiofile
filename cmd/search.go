@@ -2,12 +2,14 @@ package cmd
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/url"
 	"time"
 
+	"github.com/marianina8/audiofile/models"
 	"github.com/marianina8/audiofile/utils"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -55,6 +57,13 @@ var searchCmd = &cobra.Command{
 			return utils.Error("\n  reading response: %v\n  ", err, verbose)
 		}
 		utils.LogHTTPResponse(verbose, resp, b)
+		plainFormat, _ := cmd.Flags().GetBool("plain")
+		if plainFormat {
+			var audios models.AudioList
+			json.Unmarshal(b, &audios)
+			fmt.Fprintf(cmd.OutOrStdout(), audios.Plain())
+			return nil
+		}
 		jsonFormat, err := cmd.Flags().GetBool("json")
 		formattedBytes, err := utils.Print(b, jsonFormat)
 		if err != nil {
@@ -67,5 +76,6 @@ var searchCmd = &cobra.Command{
 func init() {
 	searchCmd.Flags().String("value", "", "string to search for in metadata")
 	searchCmd.Flags().Bool("json", false, "return json format")
+	searchCmd.Flags().Bool("plain", false, "return plain format")
 	rootCmd.AddCommand(searchCmd)
 }
