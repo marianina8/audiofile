@@ -6,11 +6,11 @@ import (
 )
 
 type Audio struct {
-	Id       string
-	Path     string
-	Metadata Metadata
-	Status   string
-	Error    []error
+	Id       string   `json:"Id"`
+	Path     string   `json:"Path"`
+	Metadata Metadata `json:"Metadata"`
+	Status   string   `json:"Status"`
+	Error    []string `json:"Error"`
 }
 
 func (a *Audio) JSON() (string, error) {
