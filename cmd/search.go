@@ -54,12 +54,12 @@ var searchCmd = &cobra.Command{
 		}
 		utils.LogHTTPResponse(verbose, resp, b)
 		plainFormat, _ := cmd.Flags().GetBool("plain")
-        if plainFormat {
-            var audios models.AudioList
-            json.Unmarshal(b, &audios)
-            fmt.Fprintf(cmd.OutOrStdout(), audios.Plain())
-            return nil
-        }
+		if plainFormat {
+			var audios models.AudioList
+			json.Unmarshal(b, &audios)
+			fmt.Fprintf(cmd.OutOrStdout(), audios.Plain())
+			return nil
+		}
 		jsonFormat, err := cmd.Flags().GetBool("json")
 		formattedBytes, err := utils.Print(b, jsonFormat)
 		if err != nil {
