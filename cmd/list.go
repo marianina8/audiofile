@@ -26,6 +26,7 @@ and transcript if available.`,
 			return err
 		}
 		jsonFormat, _ := cmd.Flags().GetBool("json")
+		plainFormat, _ := cmd.Flags().GetBool("plain")
 		formatedBytes, err := utils.Print(b, jsonFormat)
 		if err != nil {
 			fmt.Fprintf(cmd.OutOrStdout(), string(formatedBytes))
@@ -64,5 +65,6 @@ func callList(verbose bool) ([]byte, error) {
 
 func init() {
 	listCmd.Flags().Bool("json", false, "return json format")
+	listCmd.Flags().Bool("plain", false, "return plain format")
 	rootCmd.AddCommand(listCmd)
 }
