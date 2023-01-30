@@ -2,6 +2,7 @@ package storage
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -22,7 +23,10 @@ func (f FlatFile) GetByID(id string) (*models.Audio, error) {
 	if err != nil {
 		return nil, err
 	}
-	metadataFilePath := filepath.Join(dirname, "audiofile/", id, "/metadata.json")
+	metadataFilePath := filepath.Join(dirname, "audiofile", id, "metadata.json")
+	if _, err := os.Stat(metadataFilePath); errors.Is(err, os.ErrNotExist) {
+		_ = os.Mkdir(metadataFilePath, os.ModePerm)
+	}
 	file, err := ioutil.ReadFile(metadataFilePath)
 	if err != nil {
 		return nil, err
@@ -37,7 +41,7 @@ func (f FlatFile) SaveMetadata(audio *models.Audio) error {
 	if err != nil {
 		return err
 	}
-	audioDirPath := filepath.Join(dirname, "audiofile/", audio.Id)
+	audioDirPath := filepath.Join(dirname, "audiofile", audio.Id)
 	metadataFilePath := filepath.Join(audioDirPath, "metadata.json")
 	file, err := os.Create(metadataFilePath)
 	if err != nil {
@@ -65,7 +69,7 @@ func (f FlatFile) Upload(bytes []byte, filename string) (string, string, error) 
 	if err != nil {
 		return id.String(), "", err
 	}
-	audioDirPath := filepath.Join(dirname, "audiofile/", id.String())
+	audioDirPath := filepath.Join(dirname, "audiofile", id.String())
 	if err := os.MkdirAll(audioDirPath, os.ModePerm); err != nil {
 		return id.String(), "", err
 	}
@@ -82,7 +86,10 @@ func (f FlatFile) List() ([]*models.Audio, error) {
 	if err != nil {
 		return nil, err
 	}
-	metadataFilePath := filepath.Join(dirname, "audiofile/")
+	metadataFilePath := filepath.Join(dirname, "audiofile")
+	if _, err := os.Stat(metadataFilePath); errors.Is(err, os.ErrNotExist) {
+		_ = os.Mkdir(metadataFilePath, os.ModePerm)
+	}
 	files, err := ioutil.ReadDir(metadataFilePath)
 	if err != nil {
 		return nil, err
@@ -100,7 +107,7 @@ func (f FlatFile) List() ([]*models.Audio, error) {
 	return audioFiles, nil
 }
 
-func (f FlatFile) Delete(id string, tag string) error {
+func (f FlatFile) Delete(id string) error {
 	fmt.Println("Deleting")
 	return nil
 }

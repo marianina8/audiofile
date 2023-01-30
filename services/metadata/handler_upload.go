@@ -17,7 +17,7 @@ func (m *MetadataService) uploadHandler(res http.ResponseWriter, req *http.Reque
 	file, handler, err := req.FormFile("file")
 	if err != nil {
 		fmt.Println("error creating formfile: ", err)
-		res.WriteHeader(500)
+		res.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 	defer file.Close()
@@ -25,14 +25,14 @@ func (m *MetadataService) uploadHandler(res http.ResponseWriter, req *http.Reque
 	f, err := os.OpenFile(handler.Filename, os.O_WRONLY|os.O_CREATE, 0666)
 	if err != nil {
 		fmt.Println("error opening file: ", err)
-		res.WriteHeader(500)
+		res.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 	defer func() {
 		err = os.Remove(handler.Filename)
 		if err != nil {
 			fmt.Println("error opening file: ", err)
-			res.WriteHeader(500)
+			res.WriteHeader(http.StatusInternalServerError)
 		}
 		f.Close()
 	}()
@@ -40,7 +40,7 @@ func (m *MetadataService) uploadHandler(res http.ResponseWriter, req *http.Reque
 	buf := bytes.NewBuffer(nil)
 	if _, err := io.Copy(buf, file); err != nil {
 		fmt.Println("error copying file to buffer: ", err)
-		res.WriteHeader(500)
+		res.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
@@ -52,14 +52,14 @@ func (m *MetadataService) uploadHandler(res http.ResponseWriter, req *http.Reque
 	err = m.Storage.SaveMetadata(audio)
 	if err != nil {
 		fmt.Println("error saving metadata: ", err)
-		res.WriteHeader(500)
+		res.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 	audio.Status = "Initiating"
 
 	io.WriteString(res, id)
 	go func() {
-		var errors []error
+		var errors []string
 
 		audio.Status = "Complete"
 
@@ -67,19 +67,19 @@ func (m *MetadataService) uploadHandler(res http.ResponseWriter, req *http.Reque
 		err = tags.Extract(audio)
 		if err != nil {
 			fmt.Println("error extracting tags metadata: ", err)
-			errors = append(errors, err)
+			errors = append(errors, err.Error())
 		}
 		err = m.Storage.SaveMetadata(audio)
 		if err != nil {
 			fmt.Println("error saving metadata: ", err)
-			errors = append(errors, err)
+			errors = append(errors, err.Error())
 		}
 
 		// transcript
 		err = transcript.Extract(audio)
 		if err != nil {
 			fmt.Println("error extracting transcript metadata: ", err)
-			errors = append(errors, err)
+			errors = append(errors, err.Error())
 		}
 
 		audio.Error = errors
@@ -87,13 +87,13 @@ func (m *MetadataService) uploadHandler(res http.ResponseWriter, req *http.Reque
 		err = m.Storage.SaveMetadata(audio)
 		if err != nil {
 			fmt.Println("error saving metadata: ", err)
-			errors = append(errors, err)
+			errors = append(errors, err.Error())
 		}
 
 		if len(errors) > 0 {
 			fmt.Println("errors occurred extracting metadata: ")
 			for i := 0; i < len(errors); i++ {
-				fmt.Printf("\terror[%d]: %s\n", i, errors[i].Error())
+				fmt.Printf("\terror[%d]: %s\n", i, errors[i])
 			}
 		} else {
 			fmt.Println("successfully extracted and saved audio metadata: ", audio)
