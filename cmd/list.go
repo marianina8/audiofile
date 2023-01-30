@@ -2,13 +2,11 @@ package cmd
 
 import (
 	"bytes"
-	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/http"
 	"time"
 
-	"github.com/marianina8/audiofile/models"
 	"github.com/marianina8/audiofile/utils"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -46,41 +44,9 @@ and transcript if available.`,
 		}
 		jsonFormat, _ := cmd.Flags().GetBool("json")
 		plainFormat, _ := cmd.Flags().GetBool("plain")
-		if jsonFormat {
-			if utils.IsaTTY() {
-				err = utils.Pager(string(b))
-				if err != nil {
-					return err
-				}
-			} else {
-				fmt.Println(string(b))
-			}
-		} else if plainFormat {
-			var audios models.AudioList
-			json.Unmarshal(b, &audios)
-			if utils.IsaTTY() {
-				err = utils.Pager(audios.Plain())
-				if err != nil {
-					return err
-				}
-			} else {
-				fmt.Println(audios.Plain())
-			}
-		} else {
-			var audios models.AudioList
-			json.Unmarshal(b, &audios)
-			tableData, err := audios.Table()
-			if err != nil {
-				return err
-			}
-			if utils.IsaTTY() {
-				err = utils.Pager(tableData)
-				if err != nil {
-					return err
-				}
-			} else {
-				fmt.Println(tableData)
-			}
+		formatedBytes, err := utils.Print(b, jsonFormat, plainFormat)
+		if err != nil {
+			fmt.Fprintf(cmd.OutOrStdout(), string(formatedBytes))
 		}
 		return nil
 	},

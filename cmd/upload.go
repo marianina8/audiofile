@@ -1,6 +1,3 @@
-/*
-Copyright © 2022 NAME HERE <EMAIL ADDRESS>
-*/
 package cmd
 
 import (
@@ -12,6 +9,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"runtime"
 	"time"
 
 	"github.com/marianina8/audiofile/utils"
@@ -64,17 +62,21 @@ filepath of the audiofile.`,
 		if err != nil {
 			return err
 		}
-		if utils.IsaTTY() {
+		if utils.IsaTTY() && runtime.GOOS != "windows" {
 			p.UpdateTitle("Creating multipart writer...")
+		} else {
+			fmt.Println("Creating multipart writer...")
 		}
 		err = multipartWriter.Close()
 		if err != nil {
 			return err
 		}
-		if utils.IsaTTY() {
+		if utils.IsaTTY() && runtime.GOOS != "windows" {
 			pterm.Success.Println("Created multipart writer")
 			p.Increment()
 			p.UpdateTitle("Sending request...")
+		} else {
+			fmt.Println("Sending request...")
 		}
 		req, err := http.NewRequest(http.MethodPost, path, payload)
 		if err != nil {
@@ -82,38 +84,41 @@ filepath of the audiofile.`,
 		}
 
 		req.Header.Set("Content-Type", multipartWriter.FormDataContentType())
-		if utils.IsaTTY() {
+		if utils.IsaTTY() && runtime.GOOS != "windows" {
 			pterm.Success.Printf("Sending request: %s %s...", http.MethodPost, path)
 			p.Increment()
+		} else {
+			fmt.Printf("Sending request: %s %s...\n", http.MethodPost, path)
 		}
 		resp, err := client.Do(req)
 		if err != nil {
 			return err
 		}
 		defer resp.Body.Close()
-		if utils.IsaTTY() {
+		if utils.IsaTTY() && runtime.GOOS != "windows" {
 			p.UpdateTitle("Receive response...")
 			pterm.Success.Println("Receive response...")
 			p.Increment()
+		} else {
+			fmt.Println("Receive response...")
 		}
 		err = utils.CheckResponse(resp)
 		if err != nil {
 			return err
 		}
-		body, err := ioutil.ReadAll(resp.Body)
+		b, err := ioutil.ReadAll(resp.Body)
 		if err != nil {
 			return err
 		}
-		if utils.IsaTTY() {
+		if utils.IsaTTY() && runtime.GOOS != "windows" {
 			p.UpdateTitle("Process response...")
 			pterm.Success.Println("Process response...")
 			p.Increment()
 		}
-		if utils.IsaTTY() {
-			fmt.Println(checkMark, " Successfully uploaded!")
-			fmt.Println(checkMark, " Audiofile ID: ", string(body))
+		if utils.IsaTTY() && runtime.GOOS != "windows" {
+			fmt.Fprintf(cmd.OutOrStdout(), fmt.Sprintf("%s Successfully uploaded!\n Audiofile ID: %s", checkMark, string(b)))
 		} else {
-			fmt.Println(string(body))
+			fmt.Fprintf(cmd.OutOrStdout(), string(b))
 		}
 		return nil
 	},

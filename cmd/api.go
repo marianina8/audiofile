@@ -1,6 +1,3 @@
-/*
-Copyright © 2022 NAME HERE <EMAIL ADDRESS>
-*/
 package cmd
 
 import (
@@ -17,7 +14,8 @@ var apiCmd = &cobra.Command{
 	Use:   "api",
 	Short: "Start or stop the API required by the CLI",
 	Long: `Start or stop the API with the following usage:
-./audiofile api <start|stop>`,
+	./audiofile api`,
+	Example: `audiofile api`,
 	Run: func(cmd *cobra.Command, args []string) {
 		configure()
 		var port int
@@ -37,6 +35,5 @@ func configure() {
 	viper.SetConfigName("api")
 	viper.SetConfigType("json")
 	viper.ReadInConfig()
-	viper.SetDefault("api.logLevel", "info")
 	viper.SetDefault("api.port", 80)
 }

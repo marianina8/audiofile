@@ -1,18 +1,13 @@
-/*
-Copyright © 2022 NAME HERE <EMAIL ADDRESS>
-*/
 package cmd
 
 import (
 	"bytes"
-	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/url"
 	"time"
 
-	"github.com/marianina8/audiofile/models"
 	"github.com/marianina8/audiofile/utils"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -59,41 +54,9 @@ var searchCmd = &cobra.Command{
 		}
 		jsonFormat, _ := cmd.Flags().GetBool("json")
 		plainFormat, _ := cmd.Flags().GetBool("plain")
-		if jsonFormat {
-			if utils.IsaTTY() {
-				err = utils.Pager(string(b))
-				if err != nil {
-					return err
-				}
-			} else {
-				fmt.Println(string(b))
-			}
-		} else if plainFormat {
-			var audios models.AudioList
-			json.Unmarshal(b, &audios)
-			if utils.IsaTTY() {
-				err = utils.Pager(audios.Plain())
-				if err != nil {
-					return err
-				}
-			} else {
-				fmt.Println(audios.Plain())
-			}
-		} else {
-			var audios models.AudioList
-			json.Unmarshal(b, &audios)
-			tableData, err := audios.Table()
-			if err != nil {
-				return err
-			}
-			if utils.IsaTTY() {
-				err = utils.Pager(tableData)
-				if err != nil {
-					return err
-				}
-			} else {
-				fmt.Println(tableData)
-			}
+		formattedBytes, err := utils.Print(b, jsonFormat, plainFormat)
+		if err != nil {
+			fmt.Fprintf(cmd.OutOrStdout(), string(formattedBytes))
 		}
 		return nil
 	},

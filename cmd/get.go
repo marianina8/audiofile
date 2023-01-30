@@ -25,22 +25,11 @@ var getCmd = &cobra.Command{
 		if err != nil {
 			return err
 		}
-		jsonFormat, _ := cmd.Flags().GetBool("json")
 		plainFormat, _ := cmd.Flags().GetBool("plain")
-		if jsonFormat {
-			fmt.Println(string(b))
-		} else if plainFormat {
-			var audio models.Audio
-			json.Unmarshal(b, &audio)
-			fmt.Print(audio.Plain())
-		} else {
-			var audio models.Audio
-			json.Unmarshal(b, &audio)
-			tableData, err := audio.Table() // could use another flag here to show more or less detail
-			if err != nil {
-				return fmt.Errorf("\n  printing table: %v\n  ", err)
-			}
-			fmt.Println(tableData)
+		jsonFormat, _ := cmd.Flags().GetBool("json")
+		formattedBytes, err := utils.Print(b, jsonFormat, plainFormat)
+		if err != nil {
+			fmt.Fprintf(cmd.OutOrStdout(), string(formattedBytes))
 		}
 		return nil
 	},

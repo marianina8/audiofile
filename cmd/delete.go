@@ -1,6 +1,3 @@
-/*
-Copyright © 2022 NAME HERE <EMAIL ADDRESS>
-*/
 package cmd
 
 import (
@@ -43,12 +40,12 @@ var deleteCmd = &cobra.Command{
 		path := fmt.Sprintf("http://%s:%d/delete?%s", viper.Get("cli.hostname"), viper.GetInt("cli.port"), params)
 		payload := &bytes.Buffer{}
 
-		req, err := http.NewRequest(http.MethodGet, path, payload)
+		req, err := http.NewRequest(http.MethodDelete, path, payload)
 		if err != nil {
 			return err
 		}
 		if !silence {
-			fmt.Printf("Sending request: %s %s %s...\n", http.MethodGet, path, payload)
+			fmt.Printf("Sending request: %s %s %s...\n", http.MethodDelete, path, payload)
 		}
 		resp, err := client.Do(req)
 		if err != nil {
@@ -64,7 +61,7 @@ var deleteCmd = &cobra.Command{
 			return err
 		}
 		if strings.Contains(string(b), "success") && !silence {
-			fmt.Printf("\U00002705 Successfully deleted audiofile (%s)!\n", id)
+			fmt.Fprintf(cmd.OutOrStdout(), fmt.Sprintf("\U00002705 Successfully deleted audiofile (%s)!\n", id))
 		} else if !silence {
 			fmt.Printf("\U0000274C Unsuccessful delete of audiofile (%s): %s\n", id, string(b))
 		}
@@ -74,6 +71,6 @@ var deleteCmd = &cobra.Command{
 
 func init() {
 	deleteCmd.Flags().String("id", "", "audiofile id")
-	getCmd.Flags().Bool("silence", false, "silence output")
+	deleteCmd.Flags().Bool("silence", false, "silence output")
 	rootCmd.AddCommand(deleteCmd)
 }
