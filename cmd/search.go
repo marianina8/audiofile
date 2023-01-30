@@ -1,18 +1,13 @@
-/*
-Copyright © 2022 NAME HERE <EMAIL ADDRESS>
-*/
 package cmd
 
 import (
 	"bytes"
-	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/url"
 	"time"
 
-	"github.com/marianina8/audiofile/models"
 	"github.com/marianina8/audiofile/utils"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -60,10 +55,10 @@ var searchCmd = &cobra.Command{
 			return utils.Error("\n  reading response: %v\n  ", err, verbose)
 		}
 		utils.LogHTTPResponse(verbose, resp, b)
-		jsonFormat, _ := cmd.Flags().GetBool("json")
-		err = print(b, jsonFormat)
+		jsonFormat, err := cmd.Flags().GetBool("json")
+		formattedBytes, err := utils.Print(b, jsonFormat)
 		if err != nil {
-			return utils.Error("\n printing result: %v", err, verbose)
+			fmt.Fprintf(cmd.OutOrStdout(), string(formattedBytes))
 		}
 		return nil
 	},
@@ -73,34 +68,4 @@ func init() {
 	searchCmd.Flags().String("value", "", "string to search for in metadata")
 	searchCmd.Flags().Bool("json", false, "return json format")
 	rootCmd.AddCommand(searchCmd)
-}
-
-func print(b []byte, jsonFormat bool) error {
-	var err error
-	if jsonFormat {
-		if utils.IsAtty() {
-			err = utils.Pager(string(b))
-			if err != nil {
-				return fmt.Errorf("\n  paging: %v\n  ", err)
-			}
-		} else {
-			fmt.Println(string(b))
-		}
-	} else {
-		var audios models.AudioList
-		json.Unmarshal(b, &audios)
-		tableData, err := audios.Table()
-		if err != nil {
-			return fmt.Errorf("\n  printing table: %v\n  ", err)
-		}
-		if utils.IsAtty() {
-			err = utils.Pager(tableData)
-			if err != nil {
-				return fmt.Errorf("\n  paging: %v\n  ", err)
-			}
-		} else {
-			fmt.Println(tableData)
-		}
-	}
-	return nil
 }

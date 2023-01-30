@@ -1,6 +1,3 @@
-/*
-Copyright © 2022 NAME HERE <EMAIL ADDRESS>
-*/
 package cmd
 
 import (
@@ -40,11 +37,11 @@ var deleteCmd = &cobra.Command{
 		path := fmt.Sprintf("http://%s:%d/delete?%s", viper.Get("cli.hostname"), viper.GetInt("cli.port"), params)
 		payload := &bytes.Buffer{}
 
-		req, err := http.NewRequest(http.MethodGet, path, payload)
+		req, err := http.NewRequest(http.MethodDelete, path, payload)
 		if err != nil {
 			return utils.Error("\n  %v\n  check configuration to ensure properly configured hostname and port", err, verbose)
 		}
-		utils.LogRequest(verbose, http.MethodGet, path, payload.String())
+		utils.LogRequest(verbose, http.MethodDelete, path, payload.String())
 		resp, err := client.Do(req)
 		if err != nil {
 			return utils.Error("\n  %v\n  check configuration to ensure properly configured hostname and port\n  or check that api is running", err, verbose)
@@ -60,7 +57,7 @@ var deleteCmd = &cobra.Command{
 		}
 		utils.LogHTTPResponse(verbose, resp, b)
 		if strings.Contains(string(b), "success") {
-			fmt.Printf("\U00002705 Successfully deleted audiofile (%s)!\n", id)
+			fmt.Fprintf(cmd.OutOrStdout(), fmt.Sprintf("\U00002705 Successfully deleted audiofile (%s)!\n", id))
 		} else {
 			fmt.Printf("\U0000274C Unsuccessful delete of audiofile (%s): %s\n", id, string(b))
 		}

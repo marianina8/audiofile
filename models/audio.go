@@ -3,6 +3,7 @@ package models
 import (
 	"bytes"
 	"encoding/json"
+	"runtime"
 	"strconv"
 
 	"github.com/fatih/color"
@@ -54,6 +55,9 @@ func (list *AudioList) Table() (string, error) {
 			row(audio),
 		)
 	}
+	if runtime.GOOS == "windows" {
+		pterm.DisableColor()
+	}
 	return pterm.DefaultTable.WithHasHeader().WithData(data).Srender()
 }
 
@@ -63,11 +67,11 @@ func (audio *Audio) Table() (string, error) {
 }
 
 type Audio struct {
-	Id       string
-	Path     string
-	Metadata Metadata
-	Status   string
-	Error    []error
+	Id       string   `json:"Id"`
+	Path     string   `json:"Path"`
+	Metadata Metadata `json:"Metadata"`
+	Status   string   `json:"Status"`
+	Error    []string `json:"Error"`
 }
 
 func (audio *Audio) JSON() (string, error) {

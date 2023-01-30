@@ -2,6 +2,7 @@ package storage
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"io/fs"
@@ -25,6 +26,9 @@ func (f FlatFile) GetByID(id string) (*models.Audio, error) {
 		return nil, err
 	}
 	metadataFilePath := filepath.Join(dirname, "audiofile", id, "metadata.json")
+	if _, err := os.Stat(metadataFilePath); errors.Is(err, os.ErrNotExist) {
+		_ = os.Mkdir(metadataFilePath, os.ModePerm)
+	}
 	file, err := ioutil.ReadFile(metadataFilePath)
 	if err != nil {
 		return nil, err
@@ -65,6 +69,7 @@ func (f FlatFile) Upload(bytes []byte, filename string) (string, string, error) 
 	// copy file to configured storage path by tag name or id
 	dirname, err := os.UserHomeDir()
 	if err != nil {
+		fmt.Println("getting user home dir:", err.Error())
 		return id.String(), "", err
 	}
 	audioDirPath := filepath.Join(dirname, "audiofile", id.String())
@@ -85,8 +90,12 @@ func (f FlatFile) List() ([]*models.Audio, error) {
 		return nil, err
 	}
 	metadataFilePath := filepath.Join(dirname, "audiofile")
+	if _, err := os.Stat(metadataFilePath); errors.Is(err, os.ErrNotExist) {
+		_ = os.Mkdir(metadataFilePath, os.ModePerm)
+	}
 	files, err := ioutil.ReadDir(metadataFilePath)
 	if err != nil {
+		fmt.Println("reading user home dir:", err.Error())
 		return nil, err
 	}
 	audioFiles := []*models.Audio{}
@@ -94,6 +103,7 @@ func (f FlatFile) List() ([]*models.Audio, error) {
 		if file.IsDir() {
 			name, err := f.GetByID(file.Name())
 			if err != nil {
+				fmt.Println("getting ", file.Name(), " by id ", err.Error())
 				return nil, err
 			}
 			audioFiles = append(audioFiles, name)

@@ -2,14 +2,12 @@ package cmd
 
 import (
 	"bytes"
-	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/url"
 	"time"
 
-	"github.com/marianina8/audiofile/models"
 	"github.com/marianina8/audiofile/utils"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -28,16 +26,9 @@ var getCmd = &cobra.Command{
 			return err
 		}
 		jsonFormat, _ := cmd.Flags().GetBool("json")
-		if jsonFormat {
-			fmt.Println(string(b))
-		} else {
-			var audio models.Audio
-			json.Unmarshal(b, &audio)
-			tableData, err := audio.Table() // could use another flag here to show more or less detail
-			if err != nil {
-				return fmt.Errorf("\n  printing table: %v\n  ", err)
-			}
-			fmt.Println(tableData)
+		formattedBytes, err := utils.Print(b, jsonFormat)
+		if err != nil {
+			fmt.Fprintf(cmd.OutOrStdout(), string(formattedBytes))
 		}
 		return nil
 	},

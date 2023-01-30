@@ -1,6 +1,3 @@
-/*
-Copyright © 2022 NAME HERE <EMAIL ADDRESS>
-*/
 package cmd
 
 import (
@@ -28,7 +25,8 @@ var playCmd = &cobra.Command{
 		if err != nil {
 			return utils.Error("\n  unmarshalling audio struct: %v", err, verbose)
 		}
-		return play(audio.Path, verbose)
+		_, err = play(audio.Path, verbose)
+		return err
 	},
 }
 
