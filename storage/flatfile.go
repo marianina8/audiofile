@@ -23,7 +23,7 @@ func (f FlatFile) GetByID(id string) (*models.Audio, error) {
 	if err != nil {
 		return nil, err
 	}
-	metadataFilePath := filepath.Join(dirname, "audiofile", id, "/metadata.json")
+	metadataFilePath := filepath.Join(dirname, "audiofile", id, "metadata.json")
 	if _, err := os.Stat(metadataFilePath); errors.Is(err, os.ErrNotExist) {
 		_ = os.Mkdir(metadataFilePath, os.ModePerm)
 	}
