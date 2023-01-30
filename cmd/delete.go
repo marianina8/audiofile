@@ -23,6 +23,7 @@ var deleteCmd = &cobra.Command{
 	Example: `audiofile delete --id 45705eba-9342-4952-8cd4-baa2acc25188`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		var err error
+		silence, _ := cmd.Flags().GetBool("silence")
 		verbose, _ := cmd.Flags().GetBool("verbose")
 		id, _ := cmd.Flags().GetString("id")
 		if id == "" {
@@ -30,6 +31,10 @@ var deleteCmd = &cobra.Command{
 			if err != nil {
 				return utils.Error("\n  %v\n  try again and enter an id", err, verbose)
 			}
+		}
+		confirmed := utils.Confirm("Confirm you'd like to delete audiofile with matching id: " + id)
+		if !confirmed {
+			return nil
 		}
 		params := "id=" + url.QueryEscape(id)
 		path := fmt.Sprintf("http://%s:%d/delete?%s", viper.Get("cli.hostname"), viper.GetInt("cli.port"), params)
@@ -45,6 +50,9 @@ var deleteCmd = &cobra.Command{
 			return utils.Error("\n  %v\n  check configuration to ensure properly configured hostname and port\n  or check that api is running", err, verbose)
 		}
 		defer resp.Body.Close()
+		if !silence {
+			fmt.Printf("Sending request: %s %s %s...\n", http.MethodDelete, path, payload)
+		}
 		err = utils.CheckResponse(resp)
 		if err != nil {
 			return utils.Error("\n  checking response: %v", err, verbose)
@@ -54,9 +62,9 @@ var deleteCmd = &cobra.Command{
 			return utils.Error("\n  reading response: %v\n  ", err, verbose)
 		}
 		utils.LogHTTPResponse(verbose, resp, b)
-		if strings.Contains(string(b), "success") {
+		if strings.Contains(string(b), "success") && !silence {
 			fmt.Fprintf(cmd.OutOrStdout(), fmt.Sprintf("\U00002705 Successfully deleted audiofile (%s)!\n", id))
-		} else {
+		} else if !silence {
 			fmt.Printf("\U0000274C Unsuccessful delete of audiofile (%s): %s\n", id, string(b))
 		}
 		return nil
@@ -65,5 +73,6 @@ var deleteCmd = &cobra.Command{
 
 func init() {
 	deleteCmd.Flags().String("id", "", "audiofile id")
+	deleteCmd.Flags().Bool("silence", false, "silence output")
 	rootCmd.AddCommand(deleteCmd)
 }
