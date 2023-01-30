@@ -37,7 +37,6 @@ func AskForFilename() (string, error) {
 
 func AskForValue() (string, error) {
 	value := ""
-	// U+1F50D
 	prompt := &survey.Input{
 		Message: "\U0001F50DWhat value are you searching for?",
 	}
