@@ -24,7 +24,7 @@ var apiCmd = &cobra.Command{
 		configure()
 		utils.InitAPILogger()
 		var port int
-		flag.IntVar(&port, "p", int(viper.Get("api.port").(float64)), "Port for metadata service")
+		flag.IntVar(&port, "p", viper.GetInt("api.port"), "Port for metadata service")
 		flag.Parse()
 		fmt.Printf("Starting API at http://localhost:%d\nPress Ctrl-C to stop.\n", port)
 		metadataService.Run(port)
