@@ -13,16 +13,10 @@ func play(audiofilePath string) error {
 	if err := cmd.Start(); err != nil {
 		return err
 	}
-	spinnerInfo := &pterm.SpinnerPrinter{}
-	if utils.IsaTTY() {
-		spinnerInfo, _ = pterm.DefaultSpinner.Start("Enjoy the music...")
-	}
+	fmt.Println("Enjoy the music...")
 	err := cmd.Wait()
 	if err != nil {
 		return err
-	}
-	if utils.IsaTTY() {
-		spinnerInfo.Stop()
 	}
 	return nil
 }
