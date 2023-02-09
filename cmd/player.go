@@ -7,11 +7,13 @@ import (
 	"image"
 	"os"
 	"path/filepath"
+	"runtime"
 	"strconv"
 	"strings"
 	"time"
 
 	"github.com/marianina8/audiofile/models"
+	"github.com/mitchellh/go-ps"
 	"github.com/mum4k/termdash"
 	"github.com/mum4k/termdash/align"
 	"github.com/mum4k/termdash/cell"
@@ -33,10 +35,7 @@ var pID = 0
 func newStopButton() (*button.Button, error) {
 	stopButton, err := button.New("Stop", func() error {
 		go func() error {
-			proc, _ := os.FindProcess(pID)
-			if proc != nil {
-				proc.Kill()
-			}
+			stopTheMusic()
 			pID = 0
 			return nil
 		}()
@@ -53,12 +52,7 @@ func newStopButton() (*button.Button, error) {
 
 func newPlayButton(audioList *models.AudioList, playID <-chan int) (*button.Button, error) {
 	playButton, err := button.New("Play", func() error {
-		if pID != 0 {
-			proc, _ := os.FindProcess(pID)
-			if proc != nil {
-				proc.Kill()
-			}
-		}
+		stopTheMusic()
 		go func() {
 			if audiofileID <= len(*audioList)-1 && audiofileID >= 0 {
 				pID, _ = play((*audioList)[audiofileID].Path, false, true)
@@ -334,10 +328,7 @@ var playerCmd = &cobra.Command{
 		}
 		quitter := func(k *terminalapi.Keyboard) {
 			if k.Key == 'q' || k.Key == 'Q' {
-				proc, _ := os.FindProcess(pID)
-				if proc != nil {
-					proc.Kill()
-				}
+				stopTheMusic()
 				cancel()
 			}
 		}
@@ -499,4 +490,27 @@ func textState(text string, capacity, step int) []rune {
 // And so on.
 func rotateRunes(inputs []rune, step int) []rune {
 	return append(inputs[step:], inputs[:step]...)
+}
+
+func stopTheMusic() {
+	processes, _ := ps.Processes()
+	var playerExecutable string
+	switch runtime.GOOS {
+	case "windows":
+		playerExecutable = "start"
+	case "linux":
+		playerExecutable = "aplay"
+	case "darwin":
+		playerExecutable = "afplay"
+	default:
+		playerExecutable = "unknown"
+	}
+	for _, p := range processes {
+		if p.Executable() == playerExecutable {
+			proc, _ := os.FindProcess(p.Pid())
+			if proc != nil {
+				proc.Kill()
+			}
+		}
+	}
 }
