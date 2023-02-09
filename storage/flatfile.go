@@ -5,7 +5,6 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 
@@ -27,7 +26,7 @@ func (f FlatFile) GetByID(id string) (*models.Audio, error) {
 	if _, err := os.Stat(metadataFilePath); errors.Is(err, os.ErrNotExist) {
 		_ = os.Mkdir(metadataFilePath, os.ModePerm)
 	}
-	file, err := ioutil.ReadFile(metadataFilePath)
+	file, err := os.ReadFile(metadataFilePath)
 	if err != nil {
 		return nil, err
 	}
@@ -74,7 +73,7 @@ func (f FlatFile) Upload(bytes []byte, filename string) (string, string, error) 
 		return id.String(), "", err
 	}
 	audioFilePath := filepath.Join(audioDirPath, filename)
-	err = ioutil.WriteFile(audioFilePath, bytes, 0644)
+	err = os.WriteFile(audioFilePath, bytes, 0644)
 	if err != nil {
 		return id.String(), "", err
 	}
@@ -90,7 +89,7 @@ func (f FlatFile) List() ([]*models.Audio, error) {
 	if _, err := os.Stat(metadataFilePath); errors.Is(err, os.ErrNotExist) {
 		_ = os.Mkdir(metadataFilePath, os.ModePerm)
 	}
-	files, err := ioutil.ReadDir(metadataFilePath)
+	files, err := os.ReadDir(metadataFilePath)
 	if err != nil {
 		return nil, err
 	}

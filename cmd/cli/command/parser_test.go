@@ -2,8 +2,9 @@ package command
 
 import (
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
+	"os"
 	"strings"
 	"testing"
 
@@ -18,7 +19,7 @@ func (m *MockClient) Do(req *http.Request) (*http.Response, error) {
 	if strings.Contains(req.URL.String(), "/upload") {
 		return &http.Response{
 			StatusCode: 200,
-			Body:       ioutil.NopCloser(strings.NewReader("123")),
+			Body:       io.NopCloser(strings.NewReader("123")),
 		}, nil
 	}
 	if strings.Contains(req.URL.String(), "/request") {
@@ -26,22 +27,22 @@ func (m *MockClient) Do(req *http.Request) (*http.Response, error) {
 		if !ok || len(value[0]) < 1 {
 			return &http.Response{
 				StatusCode: 500,
-				Body:       ioutil.NopCloser(strings.NewReader("url param 'id' is missing")),
+				Body:       io.NopCloser(strings.NewReader("url param 'id' is missing")),
 			}, fmt.Errorf("url param 'id' is missing")
 		}
 		if string(value[0]) != "123" {
 			return &http.Response{
 				StatusCode: 500,
-				Body:       ioutil.NopCloser(strings.NewReader("audiofile id does not exist")),
+				Body:       io.NopCloser(strings.NewReader("audiofile id does not exist")),
 			}, fmt.Errorf("audiofile id does not exist")
 		}
-		file, err := ioutil.ReadFile("testdata/audio.json")
+		file, err := os.ReadFile("testdata/audio.json")
 		if err != nil {
 			return nil, err
 		}
 		return &http.Response{
 			StatusCode: 200,
-			Body:       ioutil.NopCloser(strings.NewReader(string(file))),
+			Body:       io.NopCloser(strings.NewReader(string(file))),
 		}, nil
 	}
 	return nil, nil
