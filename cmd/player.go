@@ -63,7 +63,7 @@ func newPlayButton(audioList *models.AudioList, playID <-chan int) (*button.Butt
 		}
 		go func() {
 			if audiofileID <= len(*audioList)-1 && audiofileID >= 0 {
-				pID, _ = play((*audioList)[audiofileID].Path, false, true)
+				pID, _ = play((*audioList)[audiofileID].Path, false)
 			}
 		}()
 		return nil
