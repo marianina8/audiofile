@@ -5,7 +5,7 @@ package cmd
 import (
 	"bytes"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"os"
 	"strings"
 	"testing"
@@ -20,7 +20,7 @@ func TestBug(t *testing.T) {
 	if err != nil {
 		fmt.Println("err: ", err)
 	}
-	actualBytes, err := ioutil.ReadAll(b)
+	actualBytes, err := io.ReadAll(b)
 	if err != nil {
 		t.Fatal(err)
 	}

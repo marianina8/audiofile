@@ -6,7 +6,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"os"
 	"testing"
 
@@ -22,7 +22,7 @@ func TestSearch(t *testing.T) {
 	if err != nil {
 		fmt.Println("err: ", err)
 	}
-	actualBytes, err := ioutil.ReadAll(b)
+	actualBytes, err := io.ReadAll(b)
 	if err != nil {
 		t.Fatal(err)
 	}
