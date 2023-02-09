@@ -3,7 +3,7 @@ package cmd
 import (
 	"bytes"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"testing"
 )
 
@@ -18,7 +18,7 @@ func TestDelete(t *testing.T) {
 		fmt.Println("err: ", err)
 	}
 	expected := fmt.Sprintf("\U00002705 Successfully deleted audiofile (%s)!\n", expectedID)
-	actualBytes, err := ioutil.ReadAll(b)
+	actualBytes, err := io.ReadAll(b)
 	if err != nil {
 		t.Fatal(err)
 	}

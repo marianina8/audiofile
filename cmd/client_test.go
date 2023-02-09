@@ -3,7 +3,7 @@ package cmd
 import (
 	"bytes"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"os"
 )
@@ -31,7 +31,7 @@ func (c *ClientMock) Do(req *http.Request) (*http.Response, error) {
 		return &http.Response{
 			Status:        "OK",
 			StatusCode:    http.StatusOK,
-			Body:          ioutil.NopCloser(bytes.NewBufferString(string(getBytes))),
+			Body:          io.NopCloser(bytes.NewBufferString(string(getBytes))),
 			ContentLength: int64(len(getBytes)),
 			Request:       req,
 			Header:        make(http.Header, 0),
@@ -40,7 +40,7 @@ func (c *ClientMock) Do(req *http.Request) (*http.Response, error) {
 		return &http.Response{
 			Status:        "OK",
 			StatusCode:    http.StatusOK,
-			Body:          ioutil.NopCloser(bytes.NewBufferString("123")),
+			Body:          io.NopCloser(bytes.NewBufferString("123")),
 			ContentLength: int64(len("123")),
 			Request:       req,
 			Header:        make(http.Header, 0),
@@ -49,7 +49,7 @@ func (c *ClientMock) Do(req *http.Request) (*http.Response, error) {
 		return &http.Response{
 			Status:        "OK",
 			StatusCode:    http.StatusOK,
-			Body:          ioutil.NopCloser(bytes.NewBufferString(string(listBytes))),
+			Body:          io.NopCloser(bytes.NewBufferString(string(listBytes))),
 			ContentLength: int64(len(listBytes)),
 			Request:       req,
 			Header:        make(http.Header, 0),
@@ -58,7 +58,7 @@ func (c *ClientMock) Do(req *http.Request) (*http.Response, error) {
 		return &http.Response{
 			Status:        "OK",
 			StatusCode:    http.StatusOK,
-			Body:          ioutil.NopCloser(bytes.NewBufferString("successfully deleted audio with id: 456")),
+			Body:          io.NopCloser(bytes.NewBufferString("successfully deleted audio with id: 456")),
 			ContentLength: int64(len("successfully deleted audio with id: 456")),
 			Request:       req,
 			Header:        make(http.Header, 0),
@@ -67,7 +67,7 @@ func (c *ClientMock) Do(req *http.Request) (*http.Response, error) {
 		return &http.Response{
 			Status:        "OK",
 			StatusCode:    http.StatusOK,
-			Body:          ioutil.NopCloser(bytes.NewBufferString(string(searchBytes))),
+			Body:          io.NopCloser(bytes.NewBufferString(string(searchBytes))),
 			ContentLength: int64(len(searchBytes)),
 			Request:       req,
 			Header:        make(http.Header, 0),

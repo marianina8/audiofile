@@ -3,7 +3,7 @@ package cmd
 import (
 	"bytes"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"testing"
 )
 
@@ -17,7 +17,7 @@ func TestUpload(t *testing.T) {
 		fmt.Println("err: ", err)
 	}
 	expected := "123"
-	actualBytes, err := ioutil.ReadAll(b)
+	actualBytes, err := io.ReadAll(b)
 	if err != nil {
 		t.Fatal(err)
 	}

@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 
 	"github.com/marianina8/audiofile/models"
@@ -59,7 +59,7 @@ func callList(verbose bool) ([]byte, error) {
 	if err != nil {
 		return nil, utils.Error("\n  checking response: %v", err, verbose)
 	}
-	b, err := ioutil.ReadAll(resp.Body)
+	b, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, utils.Error("\n  reading response: %v\n  ", err, verbose)
 	}
