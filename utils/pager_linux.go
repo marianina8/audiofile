@@ -1,4 +1,4 @@
-//go:build linux && (free || pro || profile)
+//go:build linux
 
 package utils
 

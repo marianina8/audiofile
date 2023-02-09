@@ -40,6 +40,6 @@ func TestGet(t *testing.T) {
 		audio1.Metadata.Tags.Genre == audio2.Metadata.Tags.Genre &&
 		audio1.Metadata.Tags.Lyrics == audio2.Metadata.Tags.Lyrics &&
 		audio1.Metadata.Tags.Year == audio2.Metadata.Tags.Year) {
-		t.Fatalf("expected \"%s\" got \"%s\"", string(expectedBytes), string(actualBytes))
+		t.Fatalf("expected %q got %q", string(expectedBytes), string(actualBytes))
 	}
 }

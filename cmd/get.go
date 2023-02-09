@@ -1,14 +1,12 @@
-//go:build free || pro
-
 package cmd
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/url"
-	"encoding/json"
 
 	"github.com/marianina8/audiofile/models"
 	"github.com/marianina8/audiofile/utils"

@@ -7,6 +7,10 @@ build-darwin-free:
 	go build -tags "darwin free" -o bin/audiofile main.go
 	chmod +x bin/audiofile
 
+build-darwin-dev:
+	go build -tags "darwin dev pro" -o bin/audiofile main.go
+	chmod +x bin/audiofile
+
 build-darwin-pro:
 	go build -tags "darwin pro" -o bin/audiofile main.go
 	chmod +x bin/audiofile

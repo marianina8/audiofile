@@ -1,4 +1,4 @@
-//go:build profile && (free || pro)
+//go:build profile
 
 package metadata
 
