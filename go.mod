@@ -8,6 +8,7 @@ require (
 	github.com/fatih/color v1.13.0
 	github.com/google/uuid v1.3.0
 	github.com/mattn/go-isatty v0.0.14
+	github.com/mitchellh/go-ps v1.0.0
 	github.com/mum4k/termdash v0.17.0
 	github.com/pterm/pterm v0.12.49
 	github.com/spf13/cobra v1.6.1
