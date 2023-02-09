@@ -1,4 +1,4 @@
-//go:build darwin && (free || pro)
+//go:build darwin
 
 package cmd
 
