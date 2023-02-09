@@ -1,5 +1,3 @@
-//go:build free || pro
-
 package cmd
 
 import (

@@ -1,4 +1,4 @@
-//go:build linux && (free || pro)
+//go:build linux
 
 package cmd
 

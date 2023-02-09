@@ -1,4 +1,4 @@
-//go:build windows && (free || pro)
+//go:build windows
 
 package cmd
 
