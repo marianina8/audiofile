@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/url"
 	"time"
@@ -52,7 +52,7 @@ var searchCmd = &cobra.Command{
 		if err != nil {
 			return utils.Error("\n  checking response: %v", err, verbose)
 		}
-		b, err := ioutil.ReadAll(resp.Body)
+		b, err := io.ReadAll(resp.Body)
 		if err != nil {
 			return utils.Error("\n  reading response: %v\n  ", err, verbose)
 		}
@@ -76,6 +76,6 @@ var searchCmd = &cobra.Command{
 func init() {
 	searchCmd.Flags().String("value", "", "string to search for in metadata")
 	searchCmd.Flags().Bool("json", false, "return json format")
-	searchCmd.Flags().Bool("plain", false, "return plain format”)
+	searchCmd.Flags().Bool("plain", false, "return plain format")
 	rootCmd.AddCommand(searchCmd)
 }
