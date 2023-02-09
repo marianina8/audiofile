@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/url"
 	"time"
@@ -52,7 +52,7 @@ var searchCmd = &cobra.Command{
 		if err != nil {
 			return utils.Error("\n  checking response: %v", err, verbose)
 		}
-		b, err := ioutil.ReadAll(resp.Body)
+		b, err := io.ReadAll(resp.Body)
 		if err != nil {
 			return utils.Error("\n  reading response: %v\n  ", err, verbose)
 		}
