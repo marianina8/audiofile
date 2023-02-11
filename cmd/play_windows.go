@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"github.com/marianina8/audiofile/utils"
 	"os/exec"
-	"runtime"
 )
 
 func play(audiofilePath string, verbose bool) (int, error) {
