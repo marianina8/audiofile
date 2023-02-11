@@ -1,41 +1,13 @@
 # audiofile
-In Chapter 13, Using Containers for Distribution, we start using Docker containers to handle integration tests, and to distribute our application via Docker Hub. 
+In Chapter 14, Publish your Go binary as a Homebrew Formula with GoReleaser, we do exactly that. 
 
-## To run the integration tests with Docker Compose:
-`docker-compose up`
+## Steps to get setup with GoReleaser:
 
-## To run the api as a container:
-`docker build -f api.Dockerfile -t audiofile:api .`
-`docker run -p 80:80 audiofile:api`
+### Install GoReleaser
+Visit https://goreleaser.com/install/
 
-## To run the cli as a container:
-`docker build -f cli.Dockerfile -t audiofile:cli .`
-`docker run --network host audiofile:cli `
+### Initialize GoReleaser
+`goreleaser init`
 
-## To run the cli as an executable:
-`docker build -f dist.Dockerfile -t audiofile:dist .`
-`docker run --rm --network host -ti audiofile:dist help`
-
-
-## To run the cli as an executable from DockerHub:
-`docker run --rm --network host -ti marianmontagnino/audiofile:latest help`
-
-## To run tests:
-make test
-
-## To run tests in verbose mode:
-make test-verbose
-
-## To generate the audiofile CLI documentation on MacOS:
-make manpages
-
-## To generate the audiofile command line interface on MacOS:
-make build-darwin
-
-## [UNIX] To start the audiofile API (required for the CLI to run):
-The API must be started and running before the CLI.  Start the APi in a separate terminal.  Within the working directory:
-./bin/audiofile api
-
-## [UNIX] To call the audiofile command line interface:
-./bin/audiofile
-
+### Run a "local-only" release to see if it works
+`oreleaser release --snapshot --clean`
