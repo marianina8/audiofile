@@ -5,7 +5,6 @@ package cmd
 import (
 	"fmt"
 	"github.com/marianina8/audiofile/utils"
-	"github.com/pterm/pterm"
 	"os/exec"
 )
 
