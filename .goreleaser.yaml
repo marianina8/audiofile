@@ -12,8 +12,8 @@ builds:
       - amd64
       - arm64
     flags:
-      - -tags=pro
-      
+      - -tags=pro dev
+
 archives:
   - format: tar.gz
     name_template: >-
