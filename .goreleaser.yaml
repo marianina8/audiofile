@@ -35,7 +35,8 @@ changelog:
       - '^docs:'
       - '^test:'
 release:
-  prelease: auto
+  prerelease: auto
+
 universal_binaries:
   - replace: true
 brews:
