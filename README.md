@@ -10,4 +10,8 @@ Visit https://goreleaser.com/install/
 `goreleaser init`
 
 ### Run a "local-only" release to see if it works
-`oreleaser release --snapshot --clean`
+`goreleaser release --snapshot --clean`
+
+### Create a new tag
+`git tag -a v0.1 -m "Initial deploy"`
+`git push origin v0.1`
