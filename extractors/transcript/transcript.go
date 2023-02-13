@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"io"
 	"log"
 	"net/http"
 	"os"
@@ -21,7 +20,7 @@ func Extract(m *models.Audio) error {
 	const UPLOAD_URL = "https://api.assemblyai.com/v2/upload"
 
 	// Load file
-	data, err := io.ReadFile(m.Path)
+	data, err := os.ReadFile(m.Path)
 	if err != nil {
 		return err
 	}
