@@ -6,15 +6,20 @@ In Chapter 13, Using Containers for Distribution, we start using Docker containe
 
 ## To run the api as a container:
 `docker build -f api.Dockerfile -t audiofile:api .`
-`docker run -p 80:80 audiofile:api`
+`docker run -rm -p 80:80 audiofile:api`
 
 ## To run the cli as a container:
 `docker build -f cli.Dockerfile -t audiofile:cli .`
-`docker run --network host audiofile:cli `
+`docker run -rm --network host audiofile:cli `
 
 ## To run the cli as an executable:
 `docker build -f dist.Dockerfile -t audiofile:dist .`
 `docker run --rm --network host -ti audiofile:dist help`
+
+
+## To run the multi-stage Docker build as an executable:
+`docker build -f dist-multistage.Dockerfile -t audiofile:dist-multistage .`
+`docker run --rm --network host -ti audiofile:dist-multistage help`
 
 
 ## To run the cli as an executable from DockerHub:
